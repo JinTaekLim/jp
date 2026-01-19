@@ -10,5 +10,6 @@ data class ParsedJlptWord(
 
 // 파싱된 JLPT 데이터 목록
 data class ParsedJlptData(
-    val words: List<ParsedJlptWord>
+    val words: List<ParsedJlptWord>,
+    val totalWordCount: Int = 0  // 해당 등급의 전체 단어 수 (예: 744건)
 )

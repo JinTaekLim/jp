@@ -1,14 +1,19 @@
 package com.jp.jp.util.playwright
 
+import com.jp.jp.util.toFormattedString
 import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserType
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import kotlin.random.Random
 
 @Component
 class PlaywrightUtil {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     // 사용자 에이전트 목록
     private val userAgents = listOf(
@@ -154,42 +159,53 @@ class PlaywrightUtil {
         page.waitForTimeout(Random.nextDouble(500.0, 1250.0))
     }
 
-    // 전체 크롤링 프로세스를 실행하고 HTML을 반환함
-    fun crawlPage(url: String, headless: Boolean = true): String {
-        val playwright = Playwright.create()
+    // Playwright 인스턴스를 생성하고 반환함
+    fun createPlaywright(): Playwright = Playwright.create()
+
+    // 여러 URL을 한 번에 크롤링하고 HTML 리스트를 반환함 (하위 호환성을 위해 유지)
+    fun crawlMultiplePages(urls: List<String>, headless: Boolean = true): List<String> {
+        val playwright = createPlaywright()
 
         try {
-            // 사람처럼 보이는 브라우저 생성
             val browser = createHumanLikeBrowser(playwright, headless)
-
-            // 사람처럼 보이는 컨텍스트 생성
             val context = createHumanLikeContext(browser)
-
-            // 웹드라이버 탐지 회피 페이지 생성
             val page = createAntiDetectionPage(context)
 
-            // 페이지 이동
-            page.navigate(url)
+            val results = mutableListOf<String>()
 
-            // 사람처럼 보이는 행동 패턴 시뮬레이션
-            simulateHumanBehavior(page)
+            for ((index, url) in urls.withIndex()) {
+                try {
+                    logger.info("페이지 방문 시작 [${LocalDateTime.now().toFormattedString()}] - $url")
+                    page.navigate(url)
+                    simulateHumanBehavior(page)
+                    waitForContentLoading(page)
+                    performFinalActions(page)
 
-            // 콘텐츠 로딩 대기
-            waitForContentLoading(page)
+                    val html = page.content()
+                    results.add(html)
 
-            // 최종 액션 수행
-            performFinalActions(page)
+                    logger.info("페이지 크롤링 완료 [${LocalDateTime.now().toFormattedString()}] - $url")
 
-            // HTML 획득
-            val html = page.content()
+                    if (index < urls.size - 1) {
+                        page.waitForTimeout(Random.nextDouble(2000.0, 4000.0))
+                    }
 
-            // 정리
+                } catch (e: Exception) {
+                    logger.warn("페이지 크롤링 실패 [${LocalDateTime.now().toFormattedString()}] - $url, 오류: ${e.message}")
+                    results.add("")
+                }
+            }
+
             browser.close()
-
-            return html
+            return results
 
         } finally {
             playwright.close()
         }
+    }
+
+    // 전체 크롤링 프로세스를 실행하고 HTML을 반환함 (내부적으로 crawlMultiplePages 활용)
+    fun crawlPage(url: String, headless: Boolean = true): String {
+        return crawlMultiplePages(listOf(url), headless).firstOrNull() ?: ""
     }
 }

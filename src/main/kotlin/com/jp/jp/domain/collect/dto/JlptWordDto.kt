@@ -17,3 +17,21 @@ data class JlptWordsResponse(
     val part: String,         // 품사 분류
     val page: String          // 페이지 번호
 )
+
+// 전체 단어 크롤링 결과 DTO
+data class CrawlingResult(
+    val totalPages: Int,     // 전체 페이지 수
+    val totalWords: Int,     // 크롤링된 전체 단어 수
+    val savedWords: Int      // DB에 저장된 단어 수
+)
+
+// 전체 단어 크롤링 API 응답 DTO
+data class AllWordsCrawlingResponse(
+    val success: Boolean,
+    val message: String,
+    val level: String,
+    val part: String,
+    val totalPages: Int,
+    val totalWords: Int,
+    val savedWords: Int
+)

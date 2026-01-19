@@ -11,8 +11,11 @@ class CrawlingManagerParser {
     // HTML을 파싱하여 JLPT 단어 목록을 추출함
     fun parseJlptHtml(html: String): ParsedJlptData {
         val document = Jsoup.parse(html)
-        val wordElements = document.select("li.row")
 
+        // 전체 단어 수 추출 (예: "5급, 전체, 744건")
+        val totalWordCount = extractTotalWordCount(document)
+
+        val wordElements = document.select("li.row")
         val words = mutableListOf<ParsedJlptWord>()
 
         for (element in wordElements) {
@@ -49,7 +52,7 @@ class CrawlingManagerParser {
             }
         }
 
-        return ParsedJlptData(words = words)
+        return ParsedJlptData(words = words, totalWordCount = totalWordCount)
     }
 
     // 의미 문자열에서 개별 의미들을 추출함
@@ -76,5 +79,35 @@ class CrawlingManagerParser {
         }
 
         return meanings
+    }
+
+    // HTML에서 전체 단어 수를 추출함 (예: "5급, 전체, 744건" -> 744)
+    private fun extractTotalWordCount(document: org.jsoup.nodes.Document): Int {
+        return try {
+            // 여러 선택자를 시도해서 전체 단어 수를 찾음
+            val selectors = listOf(
+                ".result .text .amount",  // <div class="result"><p class="text"><span class="amount">744건</span></p></div>
+                ".amount",                // 직접 amount 클래스
+                ".text .amount",         // text 하위의 amount
+                "span.amount"            // span 태그의 amount 클래스
+            )
+
+            for (selector in selectors) {
+                val resultText = document.select(selector).text()
+                if (resultText.isNotEmpty()) {
+                    // 숫자 추출 (예: "744건" -> 744)
+                    val regex = Regex("""(\d+)건""")
+                    val matchResult = regex.find(resultText)
+                    val count = matchResult?.groupValues?.get(1)?.toIntOrNull()
+                    if (count != null && count > 0) {
+                        return count
+                    }
+                }
+            }
+
+            0
+        } catch (_: Exception) {
+            0
+        }
     }
 }

@@ -26,6 +26,7 @@ class CrawlingManagerMapper {
         return JlptWordsResponse(
             words = words,
             totalCount = words.size,
+            totalWordCount = parsedData.totalWordCount,
             level = level,
             part = part,
             page = pageNum

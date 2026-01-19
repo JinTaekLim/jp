@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 # Cookie 설정 (로컬 환경 - HTTP)
 cookie:
