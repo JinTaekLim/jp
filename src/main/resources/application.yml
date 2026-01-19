@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: local
+server:
+  port: 8085
+
+# SpringDoc OpenAPI 설정
+springdoc:
+  swagger-ui:
+    path: /manage/swagger
+  api-docs:
+    path: /manage/api-docs

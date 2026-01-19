@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3308/jp?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+# Cookie 설정 (로컬 환경 - HTTP)
+cookie:
+  secure: false  # 로컬 환경에서는 HTTPS 미사용
+  sameSite: Lax  # CSRF 보호

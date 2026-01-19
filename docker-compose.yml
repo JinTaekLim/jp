@@ -1,0 +1,36 @@
+services:
+  mysql:
+    container_name: mysql-jp-dev
+    image: mysql:8.4
+    hostname: mysql
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: dev
+      MYSQL_DATABASE: jp
+      MYSQL_USER: jp
+      MYSQL_PASSWORD: dev
+    volumes:
+      - mysql_local_data:/var/lib/mysql
+    networks:
+      - jp-local
+
+  redis:
+    container_name: redis-jp-dev
+    image: redis:7.4
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_local_data:/data
+    networks:
+      - jp-local
+
+volumes:
+  mysql_local_data:
+  redis_local_data:
+
+networks:
+  jp-local:
+    name: jp-local
+    driver: bridge
