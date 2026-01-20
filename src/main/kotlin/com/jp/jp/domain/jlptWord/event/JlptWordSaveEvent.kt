@@ -1,4 +1,4 @@
-package com.jp.jp.domain.collect.event
+package com.jp.jp.domain.jlptWord.event
 
 import com.jp.jp.domain.collect.dto.JlptWordsResponse
 

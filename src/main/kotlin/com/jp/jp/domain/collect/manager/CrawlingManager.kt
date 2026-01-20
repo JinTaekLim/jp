@@ -1,7 +1,7 @@
 package com.jp.jp.domain.collect.manager
 
 import com.jp.jp.domain.collect.dto.JlptWordsResponse
-import com.jp.jp.domain.collect.event.JlptWordSaveEvent
+import com.jp.jp.domain.jlptWord.event.JlptWordSaveEvent
 import com.jp.jp.domain.collect.manager.business.CrawlingManagerMapper
 import com.jp.jp.domain.collect.manager.business.CrawlingManagerParser
 import com.jp.jp.util.playwright.PlaywrightUtil

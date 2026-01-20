@@ -1,11 +1,11 @@
-package com.jp.jp.domain.collect.entity
+package com.jp.jp.domain.jlptWord.entity
 
 import com.jp.jp.util.entity.BaseEntity
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "jlpt_words")
-class JlptWord(
+class JlptWordEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

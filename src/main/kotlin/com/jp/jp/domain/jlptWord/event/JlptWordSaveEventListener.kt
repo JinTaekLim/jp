@@ -1,6 +1,6 @@
-package com.jp.jp.domain.collect.event
+package com.jp.jp.domain.jlptWord.event
 
-import com.jp.jp.domain.collect.manager.JlptWordManager
+import com.jp.jp.domain.jlptWord.manager.JlptWordManager
 import com.jp.jp.domain.collect.service.business.CollectServiceMapper
 import com.jp.jp.util.toFormattedString
 import org.slf4j.LoggerFactory
