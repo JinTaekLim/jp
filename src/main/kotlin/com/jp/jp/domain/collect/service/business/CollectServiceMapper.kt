@@ -28,27 +28,4 @@ class CollectServiceMapper {
             toEntity(dto, level, part, pageNum)
         }
     }
-
-    // JlptWordsResponse 목록을 JlptWord Entity 목록으로 변환함 (모든 페이지 처리)
-    fun toAllEntities(responses: List<JlptWordsResponse>): List<JlptWordEntity> {
-        return responses.flatMap { response ->
-            response.words.map { dto ->
-                toEntity(dto, response.level, response.part, response.page)
-            }
-        }
-    }
-
-    // 크롤링 응답과 저장된 Entity로부터 CrawlingResult를 생성함
-    fun toCrawlingResult(
-        responses: List<JlptWordsResponse>,
-        savedEntities: List<JlptWordEntity>
-    ): CrawlingResult {
-        val totalCrawledWords = responses.sumOf { it.words.size }
-
-        return CrawlingResult(
-            totalPages = responses.size,
-            totalWords = totalCrawledWords,
-            savedWords = savedEntities.size
-        )
-    }
 }

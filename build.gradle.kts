@@ -86,6 +86,10 @@ dependencies {
     // Jsoup (HTML Parsing)
     implementation("org.jsoup:jsoup:1.18.3")
 
+    // Caffeine Cache
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine")
+
     // Test
     testImplementation("io.mockk:mockk:1.14.5")
 
