@@ -3,6 +3,7 @@ package com.jp.jp.domain.jlptWord.controller
 import com.jp.jp.domain.jlptWord.entity.JlptWordEntity
 import com.jp.jp.domain.jlptWord.service.JlptWordService
 import com.jp.jp.domain.users.service.AuthService
+import com.jp.jp.domain.userJlptLevel.entity.JlptLevel
 import com.jp.jp.util.response.ApiResponse
 import org.springframework.web.bind.annotation.*
 
@@ -16,7 +17,7 @@ class JlptWordController(
     // 순수 랜덤 JLPT 단어를 반환함 (학습 기록 고려하지 않음)
     @GetMapping("/random")
     fun getRandomWords(
-        @RequestParam level: String,
+        @RequestParam level: JlptLevel,
         @RequestParam(defaultValue = "10") count: Int
     ): ApiResponse<List<JlptWordEntity>> {
         val randomWords = jlptWordService.getRandomWords(level, count)
@@ -26,7 +27,7 @@ class JlptWordController(
     // 사용자의 학습 상태를 고려한 맞춤형 JLPT 단어를 반환함 (PENDING 단어 + 새로운 랜덤 단어)
     @GetMapping("/personalized")
     fun getPersonalizedWords(
-        @RequestParam level: String,
+        @RequestParam level: JlptLevel,
         @RequestParam(defaultValue = "10") count: Int
     ): ApiResponse<List<JlptWordEntity>> {
         val userId = authService.getCurrentUserId() // 토큰에서 userId 추출

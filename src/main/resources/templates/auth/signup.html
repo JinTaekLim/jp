@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - 일본어 단어장</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-content">
+            <!-- 뒤로가기 버튼 -->
+            <button type="button" class="back-btn" onclick="history.back()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+            <!-- 회원가입 타이틀 -->
+            <h1 class="auth-title">회원가입</h1>
+
+            <!-- 회원가입 폼 -->
+            <form id="signupForm" class="auth-form">
+                <div class="input-group">
+                    <input type="text" id="name" name="name" placeholder="이름" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" name="email" placeholder="이메일" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="비밀번호" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">회원가입</button>
+            </form>
+
+            <!-- 에러 메시지 -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- 로그인 링크 -->
+            <div class="auth-link">
+                <span>이미 계정이 있으신가요? </span>
+                <a href="/page/login">로그인</a>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/auth.js}"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레벨 선택 - 일본어 단어장</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="level-content">
+            <!-- 뒤로가기 버튼 -->
+            <button type="button" class="back-btn" onclick="history.back()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+            <!-- 로그아웃 버튼 -->
+            <button type="button" class="logout-btn" onclick="logout()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                로그아웃
+            </button>
+
+            <!-- 타이틀 -->
+            <h1 class="level-title">일본어 단어장</h1>
+
+            <!-- 단어 개수 선택 -->
+            <div class="word-count-section">
+                <label for="wordCount" class="word-count-label">학습할 단어 개수</label>
+                <input type="number" id="wordCount" class="word-count-input" value="20" min="5" max="100" step="5">
+            </div>
+
+            <!-- 레벨 선택 버튼들 -->
+            <div class="level-buttons">
+                <button type="button" class="level-btn" onclick="startStudy('N5')">
+                    <span class="level-text">N5</span>
+                    <span class="arrow">›</span>
+                </button>
+
+                <button type="button" class="level-btn" onclick="startStudy('N4')">
+                    <span class="level-text">N4</span>
+                    <span class="arrow">›</span>
+                </button>
+
+                <button type="button" class="level-btn" onclick="startStudy('N3')">
+                    <span class="level-text">N3</span>
+                    <span class="arrow">›</span>
+                </button>
+
+                <button type="button" class="level-btn" onclick="startStudy('N2')">
+                    <span class="level-text">N2</span>
+                    <span class="arrow">›</span>
+                </button>
+
+                <button type="button" class="level-btn" onclick="startStudy('N1')">
+                    <span class="level-text">N1</span>
+                    <span class="arrow">›</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/level-select.js}"></script>
+</body>
+</html>

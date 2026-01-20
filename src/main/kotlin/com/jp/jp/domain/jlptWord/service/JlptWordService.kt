@@ -3,6 +3,7 @@ package com.jp.jp.domain.jlptWord.service
 import com.jp.jp.domain.jlptWord.entity.JlptWordEntity
 import com.jp.jp.domain.jlptWord.manager.JlptWordManager
 import com.jp.jp.domain.jlptWord.service.business.JlptWordServiceExtractor
+import com.jp.jp.domain.userJlptLevel.entity.JlptLevel
 import com.jp.jp.domain.userWordLearning.manager.UserWordLearningManager
 import org.springframework.stereotype.Service
 
@@ -14,12 +15,12 @@ class JlptWordService(
 ) {
 
     // 기존 호환성을 위한 랜덤 단어 반환 (학습 기록 고려 없음)
-    fun getRandomWords(level: String, count: Int): List<JlptWordEntity> {
+    fun getRandomWords(level: JlptLevel, count: Int): List<JlptWordEntity> {
         return jlptWordManager.getRandomWords(level, count)
     }
 
     // 사용자의 학습 상태를 고려한 JLPT 단어를 반환함 (PENDING 단어 + 새로운 랜덤 단어)
-    fun getPersonalizedWords(userId: Long, level: String, count: Int): List<JlptWordEntity> {
+    fun getPersonalizedWords(userId: Long, level: JlptLevel, count: Int): List<JlptWordEntity> {
         // 1. 사용자의 모든 학습 기록을 조회함
         val userLearningRecords = userWordLearningManager.findAllByUserId(userId)
 

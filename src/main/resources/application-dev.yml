@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+# Cookie 설정 (로컬 환경 - HTTP)
+cookie:
+  secure: false  # 로컬 환경에서는 HTTPS 미사용
+  sameSite: Lax  # CSRF 보호

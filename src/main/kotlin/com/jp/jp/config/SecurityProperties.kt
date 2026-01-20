@@ -16,6 +16,11 @@ class SecurityProperties {
             "/api/users", // POST 회원가입
             "/api/users/login",
             "/api/collect/**", // collect API는 일단 인증 없이 접근 가능
+            "/page/**", // 프론트엔드 페이지들
+            "/css/**", // CSS 정적 리소스
+            "/js/**", // JavaScript 정적 리소스
+            "/images/**", // 이미지 정적 리소스
+            "/favicon.ico", // 파비콘
             "/swagger-ui/**", // Swagger UI 정적 리소스
             "/swagger-ui.html", // Swagger UI 메인 페이지
             "/v3/api-docs/**", // OpenAPI 3 문서

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일본어 단어장</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- 메인 타이틀 -->
+            <h1 class="main-title">일본어 단어장</h1>
+
+            <!-- 일본어 책 아이콘 -->
+            <div class="book-icon">
+                <img src="/images/japanese-book-logo.png" alt="일본어 단어장" class="main-logo">
+            </div>
+
+            <!-- 버튼들 -->
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="location.href='/page/login'">
+                    로그인
+                </button>
+                <a href="/page/signup" class="signup-link">회원가입</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단어 학습 - 일본어 단어장</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="study-content">
+            <!-- 헤더 -->
+            <div class="study-header">
+                <button type="button" class="back-btn" onclick="history.back()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                <h1 class="study-title">일본어 단어장</h1>
+
+                <!-- 진행바와 타이머 -->
+                <div class="progress-timer">
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <span id="timer" class="timer">00:00</span>
+                </div>
+            </div>
+
+            <!-- 단어 표시 영역 -->
+            <div class="word-display">
+                <!-- 품사 표시 (우측상단 고정) -->
+                <div id="partOfSpeech" class="part-of-speech"></div>
+
+                <!-- 히라가나 표시 (상단 고정 위치) -->
+                <div id="hiraganaDisplay" class="hiragana-display" style="display: none;"></div>
+
+                <!-- 메인 단어 표시 (중앙 고정) -->
+                <div id="mainWord" class="main-word">
+                    <!-- 한자가 있으면 한자, 없으면 일본어 표시 -->
+                </div>
+
+                <!-- 의미 표시 (하단 고정 위치) -->
+                <div id="meaningDisplay" class="meaning-display" style="display: none;">
+                    <ul id="meaningList" class="meaning-list"></ul>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="button-groups">
+                <!-- 힌트 버튼들 -->
+                <div class="hint-buttons">
+                    <button id="hiraganaBtn" type="button" class="btn btn-hint">
+                        히라가나 보기
+                    </button>
+                    <button id="meaningBtn" type="button" class="btn btn-hint">
+                        뜻 보기
+                    </button>
+                </div>
+
+                <!-- 학습 결과 버튼들 -->
+                <div class="result-buttons">
+                    <button id="retryBtn" type="button" class="btn btn-retry">
+                        다시 학습
+                    </button>
+                    <button id="knowBtn" type="button" class="btn btn-know">
+                        알고 있음
+                    </button>
+                </div>
+            </div>
+
+            <!-- 학습 완료 모달 -->
+            <div id="completeModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>학습 완료!</h2>
+                    <div id="completeMessage" class="complete-message"></div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn btn-primary" onclick="restartStudy()">다시 시작</button>
+                        <button type="button" class="btn btn-secondary" onclick="goToLevelSelect()">레벨 선택</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 로딩 표시 -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>단어를 불러오는 중...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 레벨 데이터 전달 -->
+    <script th:inline="javascript">
+        window.currentLevel = /*[[${level}]]*/ 'N5';
+    </script>
+    <script th:src="@{/js/word-study.js}"></script>
+</body>
+</html>
