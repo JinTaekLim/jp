@@ -30,13 +30,12 @@ class CrawlingManagerParser {
                     pronunciationElement.replace("[", "").replace("]", "").trim().takeIf { it.isNotEmpty() }
                 } else null
 
-                // 품사 추출
-                val partOfSpeechElement = element.select("span.word_class").text().trim()
-                if (partOfSpeechElement.isEmpty()) continue
+                // 품사 추출 (품사가 없는 단어도 허용)
+                val partOfSpeechElement = element.select("span.word_class").text().trim().takeIf { it.isNotEmpty() }
 
                 // 의미 추출
                 val meanElement = element.select("p.mean").text().trim()
-                val meanings = extractMeanings(meanElement, partOfSpeechElement)
+                val meanings = extractMeanings(meanElement, partOfSpeechElement ?: "")
 
                 words.add(
                     ParsedJlptWord(
@@ -95,10 +94,11 @@ class CrawlingManagerParser {
             for (selector in selectors) {
                 val resultText = document.select(selector).text()
                 if (resultText.isNotEmpty()) {
-                    // 숫자 추출 (예: "744건" -> 744)
-                    val regex = Regex("""(\d+)건""")
+                    // 숫자 추출 (예: "744건", "1,037건" -> 744, 1037)
+                    val regex = Regex("""([\d,]+)건""")
                     val matchResult = regex.find(resultText)
-                    val count = matchResult?.groupValues?.get(1)?.toIntOrNull()
+                    val numberStr = matchResult?.groupValues?.get(1)?.replace(",", "")
+                    val count = numberStr?.toIntOrNull()
                     if (count != null && count > 0) {
                         return count
                     }

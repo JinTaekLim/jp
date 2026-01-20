@@ -14,7 +14,7 @@ class CollectServiceMapper {
         return JlptWord(
             japanese = dto.japanese,
             kanji = dto.kanji,
-            partOfSpeech = dto.partOfSpeech,
+            partOfSpeech = dto.partOfSpeech ?: "미분류", // null인 경우 기본값 제공
             meanings = dto.meanings,
             level = level,
             part = part,
