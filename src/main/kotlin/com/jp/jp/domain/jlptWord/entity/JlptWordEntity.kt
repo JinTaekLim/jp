@@ -23,7 +23,7 @@ class JlptWordEntity(
     val partOfSpeech: String,
 
     // 의미 목록
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "jlpt_word_meanings", joinColumns = [JoinColumn(name = "jlpt_word_id")])
     @Column(name = "meaning")
     val meanings: List<String>,
