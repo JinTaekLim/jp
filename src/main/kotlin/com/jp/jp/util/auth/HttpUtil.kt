@@ -127,19 +127,9 @@ class HttpUtil(
      * 쿠키에서 리프레시 토큰 추출
      */
     fun getRefreshTokenFromCookie(request: HttpServletRequest): String {
-        val cookies = request.cookies
-
-        // 쿠키 존재 여부 확인 및 로깅
-        if (cookies == null) { throw IllegalArgumentException("쿠키가 존재하지 않습니다.") }
-
-
-        // 리프레시 토큰 추출
-        val refreshToken = cookies.firstOrNull { it.name == REFRESH_TOKEN_COOKIE }?.value
-
-        if (refreshToken == null) {
-            throw IllegalArgumentException("리프레시 토큰이 쿠키에 존재하지 않습니다.")
-        }
-
-        return refreshToken
+        return request.cookies
+            ?.firstOrNull { it.name == REFRESH_TOKEN_COOKIE }
+            ?.value
+            ?: throw IllegalArgumentException("리프레시 토큰이 쿠키에 존재하지 않습니다.")
     }
 }
