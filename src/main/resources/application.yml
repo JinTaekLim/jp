@@ -4,6 +4,17 @@ spring:
 server:
   port: 8085
 
+# JWT 토큰 설정
+jwt:
+  secret: myJwtSecretKey12345678901234567890123456789012345
+  expiration: 86400000 # 24시간 (milliseconds)
+  refresh-expiration: 604800000 # 7일 (milliseconds)
+
+# 쿠키 설정
+cookie:
+  secure: false # 개발환경에서는 false, 운영환경에서는 true
+  sameSite: Lax
+
 # SpringDoc OpenAPI 설정
 springdoc:
   swagger-ui:
