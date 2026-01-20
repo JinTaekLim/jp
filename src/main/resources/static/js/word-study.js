@@ -80,10 +80,7 @@ class WordStudyApp {
     // API에서 단어 불러오기
     async loadWords() {
         const response = await fetch(`/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            method: 'GET'
         });
 
         if (!response.ok) {

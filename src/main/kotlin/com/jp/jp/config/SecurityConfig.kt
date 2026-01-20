@@ -40,7 +40,7 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             .addFilterBefore(LogFilter(logManager), SecurityContextHolderFilter::class.java)
-            .addFilterBefore(jwtAuthenticationFilter, LogFilter::class.java)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
