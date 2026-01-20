@@ -4,7 +4,7 @@ import com.jp.jp.domain.collect.controller.business.CollectControllerMapper
 import com.jp.jp.domain.collect.dto.AllWordsCrawlingResponse
 import com.jp.jp.domain.collect.dto.JlptWordsResponse
 import com.jp.jp.domain.collect.service.CollectService
-import org.springframework.http.ResponseEntity
+import com.jp.jp.util.response.ApiResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -21,15 +21,13 @@ class CollectController(
         @RequestParam(defaultValue = "allClass") part: String,
         @RequestParam(defaultValue = "1") pageNum: String,
         @RequestParam(defaultValue = "true") headless: Boolean
-    ): ResponseEntity<JlptWordsResponse> {
-
+    ): ApiResponse<JlptWordsResponse> {
         return try {
             val wordsResponse = collectService.getNaverJlptWords(level, part, pageNum, headless)
-            ResponseEntity.ok(wordsResponse)
+            ApiResponse.success(wordsResponse, "JLPT 단어 수집이 완료되었습니다")
         } catch (e: Exception) {
-            ResponseEntity.internalServerError().body(
-                collectControllerMapper.toSinglePageFailureResponse(level, part, pageNum)
-            )
+            val failureResponse = collectControllerMapper.toSinglePageFailureResponse(level, part, pageNum)
+            return ApiResponse.fail<JlptWordsResponse>("CRAWLING_ERROR", "JLPT 단어 수집에 실패했습니다", failureResponse)
         }
     }
 
@@ -40,17 +38,14 @@ class CollectController(
         @RequestParam(defaultValue = "allClass") part: String,
         @RequestParam(defaultValue = "1") startPageNum: Int,
         @RequestParam(defaultValue = "true") headless: Boolean
-    ): ResponseEntity<AllWordsCrawlingResponse> {
-
+    ): ApiResponse<AllWordsCrawlingResponse> {
         return try {
             val results = collectService.crawlAllNaverJlptWords(level, part, startPageNum, headless)
-            ResponseEntity.ok(
-                collectControllerMapper.toSuccessResponse(results, level, part, startPageNum)
-            )
+            val successResponse = collectControllerMapper.toSuccessResponse(results, level, part, startPageNum)
+            ApiResponse.success(successResponse, "전체 JLPT 단어 수집이 완료되었습니다")
         } catch (e: Exception) {
-            ResponseEntity.internalServerError().body(
-                collectControllerMapper.toAllWordsFailureResponse(e.message ?: "알 수 없는 오류", level, part)
-            )
+            val failureResponse = collectControllerMapper.toAllWordsFailureResponse(e.message ?: "알 수 없는 오류", level, part)
+            return ApiResponse.fail<AllWordsCrawlingResponse>("CRAWLING_ERROR", "전체 JLPT 단어 수집에 실패했습니다", failureResponse)
         }
     }
 }

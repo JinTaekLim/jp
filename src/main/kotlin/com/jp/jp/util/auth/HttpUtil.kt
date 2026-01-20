@@ -130,26 +130,16 @@ class HttpUtil(
         val cookies = request.cookies
 
         // 쿠키 존재 여부 확인 및 로깅
-        if (cookies == null) {
-            println(">>> [HttpUtil] 요청에 쿠키가 없습니다.")
-            throw IllegalArgumentException("쿠키가 존재하지 않습니다.")
-        }
+        if (cookies == null) { throw IllegalArgumentException("쿠키가 존재하지 않습니다.") }
 
-        // 모든 쿠키 출력
-        println(">>> [HttpUtil] 쿠키 개수: ${cookies.size}")
-        cookies.forEach { cookie ->
-            println(">>> [HttpUtil] 쿠키 이름: ${cookie.name}, 값 길이: ${cookie.value?.length ?: 0}")
-        }
 
         // 리프레시 토큰 추출
         val refreshToken = cookies.firstOrNull { it.name == REFRESH_TOKEN_COOKIE }?.value
 
         if (refreshToken == null) {
-            println(">>> [HttpUtil] '$REFRESH_TOKEN_COOKIE' 쿠키를 찾을 수 없습니다.")
             throw IllegalArgumentException("리프레시 토큰이 쿠키에 존재하지 않습니다.")
         }
 
-        println(">>> [HttpUtil] 리프레시 토큰 추출 성공 (길이: ${refreshToken.length})")
         return refreshToken
     }
 }

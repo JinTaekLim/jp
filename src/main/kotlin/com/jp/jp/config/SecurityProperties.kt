@@ -16,11 +16,12 @@ class SecurityProperties {
             "/api/users", // POST 회원가입
             "/api/users/login",
             "/api/collect/**", // collect API는 일단 인증 없이 접근 가능
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/v3/api-docs/**",
-            "/actuator/**",
-            "/h2-console/**"
+            "/swagger-ui/**", // Swagger UI 정적 리소스
+            "/swagger-ui.html", // Swagger UI 메인 페이지
+            "/v3/api-docs/**", // OpenAPI 3 문서
+            "/manage/**", // Spring Boot Actuator 관리 경로
+            "/actuator/**", // Spring Boot Actuator
+            "/h2-console/**" // H2 데이터베이스 콘솔
         )
     }
 }
