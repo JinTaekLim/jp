@@ -9,4 +9,7 @@ interface UserWordLearningRepository : JpaRepository<UserWordLearningEntity, Lon
 
     // 특정 사용자의 특정 단어 학습 상태를 조회함
     fun findByUserIdAndWordId(userId: Long, wordId: Long): UserWordLearningEntity?
+
+    // 특정 사용자의 모든 단어 학습 기록을 조회함
+    fun findAllByUserId(userId: Long): List<UserWordLearningEntity>
 }

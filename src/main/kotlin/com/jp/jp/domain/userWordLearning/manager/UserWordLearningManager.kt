@@ -18,6 +18,11 @@ class UserWordLearningManager(
         return userWordLearningRepository.findByUserIdAndWordId(userId, wordId)
     }
 
+    // 특정 사용자의 모든 단어 학습 기록을 조회함
+    fun findAllByUserId(userId: Long): List<UserWordLearningEntity> {
+        return userWordLearningRepository.findAllByUserId(userId)
+    }
+
     // 단어 학습 상태를 저장하거나 업데이트함
     fun save(entity: UserWordLearningEntity): UserWordLearningEntity {
         return userWordLearningRepository.save(entity)

@@ -29,4 +29,23 @@ class JlptWordManager(
         val words = findByLevel(level)
         return words.shuffled().take(count)
     }
+
+    // ID 목록으로 특정 단어들을 조회함
+    fun getWordsByIds(ids: List<Long>): List<JlptWordEntity> {
+        return jlptWordRepository.findAllById(ids)
+    }
+
+    // 특정 ID들을 제외하고 캐시된 단어 목록에서 무작위로 N개를 선택하여 반환함
+    fun getRandomWordsExcluding(level: String, count: Int, excludeIds: Set<Long>): List<JlptWordEntity> {
+        val words = findByLevel(level)
+        val filteredWords = words.filter { it.id !in excludeIds }
+        return filteredWords.shuffled().take(count)
+    }
+
+    // ID 목록과 레벨로 특정 단어들을 조회함 (한 번의 쿼리로 처리)
+    fun getWordsByIdsAndLevel(ids: Set<Long>, level: String): List<JlptWordEntity> {
+        return ids.takeIf { it.isNotEmpty() }
+            ?.let { jlptWordRepository.findByIdInAndLevel(it, level) }
+            ?: emptyList()
+    }
 }

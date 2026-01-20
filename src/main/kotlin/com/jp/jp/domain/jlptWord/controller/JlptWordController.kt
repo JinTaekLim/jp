@@ -13,14 +13,24 @@ class JlptWordController(
     private val authService: AuthService
 ) {
 
-    // 사용자의 JLPT 레벨에 따라 랜덤한 단어를 반환함
+    // 순수 랜덤 JLPT 단어를 반환함 (학습 기록 고려하지 않음)
     @GetMapping("/random")
     fun getRandomWords(
         @RequestParam level: String,
         @RequestParam(defaultValue = "10") count: Int
     ): ApiResponse<List<JlptWordEntity>> {
-        val userId = authService.getCurrentUserId() // 토큰에서 userId 추출
         val randomWords = jlptWordService.getRandomWords(level, count)
         return ApiResponse.success(randomWords, "랜덤 JLPT 단어 조회가 완료되었습니다")
+    }
+
+    // 사용자의 학습 상태를 고려한 맞춤형 JLPT 단어를 반환함 (PENDING 단어 + 새로운 랜덤 단어)
+    @GetMapping("/personalized")
+    fun getPersonalizedWords(
+        @RequestParam level: String,
+        @RequestParam(defaultValue = "10") count: Int
+    ): ApiResponse<List<JlptWordEntity>> {
+        val userId = authService.getCurrentUserId() // 토큰에서 userId 추출
+        val personalizedWords = jlptWordService.getPersonalizedWords(userId, level, count)
+        return ApiResponse.success(personalizedWords, "사용자 맞춤 JLPT 단어 조회가 완료되었습니다")
     }
 }
