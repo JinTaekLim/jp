@@ -1,11 +1,16 @@
 spring:
   datasource:
-    url: ${MYSQL_URL}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
 # Cookie 설정 (로컬 환경 - HTTP)
 cookie:
