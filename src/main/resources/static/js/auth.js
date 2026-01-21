@@ -38,12 +38,8 @@ async function handleLogin(event) {
         const data = await response.json();
 
         if (response.ok) {
-            // 로그인 성공
-            showMessage('로그인 성공!', 'success');
-            // 레벨 선택 페이지로 이동
-            setTimeout(() => {
-                window.location.href = '/page/study/level';
-            }, 1000);
+            // 로그인 성공 - 바로 레벨 선택 페이지로 이동
+            window.location.href = '/page/study/level';
         } else {
             // 로그인 실패
             showError(data.message || '로그인에 실패했습니다.');

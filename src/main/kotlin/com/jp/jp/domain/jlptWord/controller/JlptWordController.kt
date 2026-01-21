@@ -24,7 +24,7 @@ class JlptWordController(
         return ApiResponse.success(randomWords, "랜덤 JLPT 단어 조회가 완료되었습니다")
     }
 
-    // 사용자의 학습 상태를 고려한 맞춤형 JLPT 단어를 반환함 (PENDING 단어 + 새로운 랜덤 단어)
+    // 회독에 최적화된 JLPT 단어를 반환함 (복습 긴급 → 어려운 PENDING → 일반 PENDING → 새 단어 순)
     @GetMapping("/personalized")
     fun getPersonalizedWords(
         @RequestParam level: JlptLevel,
@@ -32,6 +32,6 @@ class JlptWordController(
     ): ApiResponse<List<JlptWordEntity>> {
         val userId = authService.getCurrentUserId() // 토큰에서 userId 추출
         val personalizedWords = jlptWordService.getPersonalizedWords(userId, level, count)
-        return ApiResponse.success(personalizedWords, "사용자 맞춤 JLPT 단어 조회가 완료되었습니다")
+        return ApiResponse.success(personalizedWords, "회독 최적화 JLPT 단어 조회가 완료되었습니다")
     }
 }

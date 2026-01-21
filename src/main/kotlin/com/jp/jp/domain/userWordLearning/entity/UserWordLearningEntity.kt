@@ -38,6 +38,6 @@ class UserWordLearningEntity(
     // 현재 상태
     @Column(name = "status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    val status: StudyStatus = StudyStatus.NEW
+    val status: StudyStatus = StudyStatus.LEARNING
 
 ) : BaseEntity()

@@ -23,7 +23,7 @@ class UserWordLearningManagerMapper {
             totalAttempts = 1,
             lastStudiedAt = LocalDateTime.now(),
             nextReviewAt = nextReviewAt,
-            status = if (isSuccess) StudyStatus.PENDING else StudyStatus.LEARNING
+            status = StudyStatus.LEARNING
         )
     }
 
@@ -32,18 +32,16 @@ class UserWordLearningManagerMapper {
         entity: UserWordLearningEntity,
         nextReviewAt: LocalDateTime
     ): UserWordLearningEntity {
-        val newConsecutiveCorrect = entity.consecutiveCorrect + 1
-
         return UserWordLearningEntity(
             id = entity.id,
             userId = entity.userId,
             wordId = entity.wordId,
-            consecutiveCorrect = newConsecutiveCorrect,
+            consecutiveCorrect = entity.consecutiveCorrect + 1,
             consecutiveIncorrect = 0, // 성공이므로 오답 카운트 초기화
             totalAttempts = entity.totalAttempts + 1,
             lastStudiedAt = LocalDateTime.now(),
             nextReviewAt = nextReviewAt,
-            status = StudyStatus.PENDING // 성공 시 항상 PENDING으로 설정
+            status = StudyStatus.LEARNING
         )
     }
 
@@ -66,4 +64,5 @@ class UserWordLearningManagerMapper {
             status = StudyStatus.LEARNING
         )
     }
+
 }

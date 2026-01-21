@@ -65,12 +65,12 @@ body {
 /* 뒤로가기 버튼 */
 .back-btn {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 8px;
+    left: 8px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 8px;
     transition: background-color 0.2s ease;
 }
@@ -135,24 +135,87 @@ body {
     flex-shrink: 0;
 }
 
-/* 메인 로고 이미지 - 동적 크기 */
-.book-icon {
+/* あいうえお 애니메이션 */
+.hiragana-animation {
     margin: 20px 0 30px;
     display: flex;
     justify-content: center;
-    background: transparent;
+    align-items: center;
+    gap: clamp(8px, 3vw, 15px);
     flex-shrink: 0;
+    min-height: clamp(120px, 25vw, 160px);
 }
 
-.main-logo {
-    width: clamp(150px, 40vw, 200px);
-    height: auto;
-    max-width: 100%;
-    background: transparent !important;
-    background-color: transparent !important;
-    border: none;
-    box-shadow: none;
-    outline: none;
+.hiragana-char {
+    font-size: clamp(48px, 15vw, 80px);
+    font-weight: 300;
+    color: #007AFF;
+    opacity: 0;
+    transform: translateY(30px) rotate(-10deg);
+    animation: hiraganaAppear 0.8s ease-out forwards;
+    transition: all 0.3s ease;
+    cursor: default;
+    text-shadow: 0 2px 4px rgba(0, 122, 255, 0.2);
+}
+
+.hiragana-char:nth-child(1) {
+    animation-delay: 0.1s;
+    color: #FF6B35;
+}
+
+.hiragana-char:nth-child(2) {
+    animation-delay: 0.3s;
+    color: #4CAF50;
+}
+
+.hiragana-char:nth-child(3) {
+    animation-delay: 0.5s;
+    color: #9C27B0;
+}
+
+.hiragana-char:nth-child(4) {
+    animation-delay: 0.7s;
+    color: #FF9800;
+}
+
+.hiragana-char:nth-child(5) {
+    animation-delay: 0.9s;
+    color: #E91E63;
+}
+
+.hiragana-char:hover {
+    transform: translateY(-5px) scale(1.1);
+    text-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+}
+
+@keyframes hiraganaAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) rotate(-10deg) scale(0.8);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-5px) rotate(2deg) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+}
+
+/* 지속적인 미묘한 애니메이션 */
+.hiragana-char {
+    animation: hiraganaAppear 0.8s ease-out forwards,
+               gentleFloat 3s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-3px) rotate(1deg);
+    }
 }
 
 /* 버튼 그룹 - 반응형 */
@@ -368,8 +431,8 @@ body {
 
 /* 단어 학습 페이지 - 모바일 최적화 */
 .study-content {
-    padding: 10px;
-    height: 100vh;
+    padding: 8px;
+    height: 100svh; /* 모바일 브라우저 UI를 제외한 실제 화면 높이 */
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -379,10 +442,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     position: relative;
     flex-shrink: 0;
-    height: 60px;
+    height: 44px;
 }
 
 .study-title {

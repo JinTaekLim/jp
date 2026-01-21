@@ -1,6 +1,9 @@
 // 레벨 선택 페이지 JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 저장된 단어수 설정값 불러오기
+    loadWordCountSetting();
+
     // 레벨 버튼들에 애니메이션 추가
     const levelButtons = document.querySelectorAll('.level-btn');
 
@@ -15,7 +18,32 @@ document.addEventListener('DOMContentLoaded', function() {
             button.style.transform = 'translateY(0)';
         }, index * 100);
     });
+
+    // 단어수 입력 필드 변경 이벤트 추가
+    const wordCountInput = document.getElementById('wordCount');
+    if (wordCountInput) {
+        wordCountInput.addEventListener('input', saveWordCountSetting);
+        wordCountInput.addEventListener('change', saveWordCountSetting);
+    }
 });
+
+// localStorage에서 단어수 설정값 불러오기
+function loadWordCountSetting() {
+    const savedWordCount = localStorage.getItem('jp_wordCount');
+    const wordCountInput = document.getElementById('wordCount');
+
+    if (savedWordCount && wordCountInput) {
+        wordCountInput.value = savedWordCount;
+    }
+}
+
+// localStorage에 단어수 설정값 저장하기
+function saveWordCountSetting() {
+    const wordCountInput = document.getElementById('wordCount');
+    if (wordCountInput) {
+        localStorage.setItem('jp_wordCount', wordCountInput.value);
+    }
+}
 
 // 레벨 선택하여 학습 시작
 function startStudy(level) {
