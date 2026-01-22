@@ -83,4 +83,13 @@ class UserWordLearningManager(
         }
     }
 
+    // lastId 기반으로 사용자의 학습한 단어들을 조회함
+    fun findUserStudiedWords(
+        userId: Long,
+        lastId: Long?,
+        size: Int
+    ): List<UserWordLearningEntity> {
+        return userWordLearningRepository.findUserStudiedWords(userId, lastId, size)
+    }
+
 }

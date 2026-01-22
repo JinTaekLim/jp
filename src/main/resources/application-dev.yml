@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -15,4 +15,4 @@ spring:
 # Cookie 설정 (로컬 환경 - HTTP)
 cookie:
   secure: false  # 로컬 환경에서는 HTTPS 미사용
-  sameSite: Lax  # CSRF 보호
+  sameSite: Lax  # CSRF 보호\

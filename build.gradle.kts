@@ -11,24 +11,8 @@ plugins {
     kotlin("kapt") version "1.9.24"
     id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.google.cloud.tools.jib") version "3.4.5"
-
 }
 
-jib {
-    from {
-        image = "eclipse-temurin:17-jre-alpine"
-    }
-    to {
-        image = project.findProperty("dockerImageName") as? String
-        tags = setOf("latest")
-
-        auth {
-            username = project.findProperty("dockerUsername") as? String
-            password = project.findProperty("dockerPassword") as? String
-        }
-    }
-}
 
 group = "com.jp"
 version = "0.0.1-SNAPSHOT"
@@ -47,6 +31,10 @@ dependencies {
 
     // Jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // QueryDSL
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
     // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

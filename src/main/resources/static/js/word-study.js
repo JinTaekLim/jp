@@ -79,13 +79,10 @@ class WordStudyApp {
 
     // API에서 단어 불러오기
     async loadWords() {
-        const response = await fetch(`/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`, {
-            method: 'GET'
-        });
+        const response = await apiGet(`/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`);
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // apiGet에서 null 반환시 인증 오류로 리다이렉트된 상태
+        if (!response) return;
 
         const data = await response.json();
         this.words = data.data || [];
@@ -200,19 +197,10 @@ class WordStudyApp {
     async recordStudyResult(wordId, isSuccess) {
         const endpoint = isSuccess ? '/api/word-learning/success' : '/api/word-learning/failure';
 
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                wordId: wordId
-            })
-        });
+        const response = await apiPost(endpoint, { wordId: wordId });
 
-        if (!response.ok) {
-            throw new Error(`Failed to record study result: ${response.status}`);
-        }
+        // apiPost에서 null 반환시 인증 오류로 리다이렉트된 상태
+        if (!response) return;
 
         return await response.json();
     }

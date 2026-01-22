@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-interface UserWordLearningRepository : JpaRepository<UserWordLearningEntity, Long> {
+interface UserWordLearningRepository : JpaRepository<UserWordLearningEntity, Long>, UserWordLearningCustomRepository {
 
     // 특정 사용자의 특정 단어 학습 상태를 조회함
     fun findByUserIdAndWordId(userId: Long, wordId: Long): UserWordLearningEntity?

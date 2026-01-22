@@ -34,6 +34,12 @@ class MainController {
         return "study/level-select"
     }
 
+    // 학습 기록 페이지
+    @GetMapping("/study/record")
+    fun studyRecord(): String {
+        return "study/record"
+    }
+
     // 단어 학습 페이지
     @GetMapping("/study/words/{level}")
     fun wordStudy(@PathVariable level: String, model: Model): String {

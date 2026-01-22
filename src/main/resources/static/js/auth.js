@@ -24,26 +24,18 @@ async function handleLogin(event) {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('/api/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
+        const response = await apiPost('/api/users/login', {
+            email: email,
+            password: password
         });
+
+        // apiPost에서 null 반환시 인증 오류로 리다이렉트된 상태
+        if (!response) return;
 
         const data = await response.json();
 
-        if (response.ok) {
-            // 로그인 성공 - 바로 레벨 선택 페이지로 이동
-            window.location.href = '/page/study/level';
-        } else {
-            // 로그인 실패
-            showError(data.message || '로그인에 실패했습니다.');
-        }
+        // 로그인 성공 - 바로 레벨 선택 페이지로 이동
+        window.location.href = '/page/study/level';
     } catch (error) {
         console.error('Login error:', error);
         showError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
@@ -66,31 +58,23 @@ async function handleSignup(event) {
     }
 
     try {
-        const response = await fetch('/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                name: name,
-                password: password
-            })
+        const response = await apiPost('/api/users', {
+            email: email,
+            name: name,
+            password: password
         });
+
+        // apiPost에서 null 반환시 인증 오류로 리다이렉트된 상태
+        if (!response) return;
 
         const data = await response.json();
 
-        if (response.ok) {
-            // 회원가입 성공
-            showMessage('회원가입이 완료되었습니다!', 'success');
-            // 로그인 페이지로 이동
-            setTimeout(() => {
-                window.location.href = '/page/login';
-            }, 1500);
-        } else {
-            // 회원가입 실패
-            showError(data.message || '회원가입에 실패했습니다.');
-        }
+        // 회원가입 성공
+        showMessage('회원가입이 완료되었습니다!', 'success');
+        // 로그인 페이지로 이동
+        setTimeout(() => {
+            window.location.href = '/page/login';
+        }, 1500);
     } catch (error) {
         console.error('Signup error:', error);
         showError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');

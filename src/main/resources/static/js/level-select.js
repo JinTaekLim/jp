@@ -145,29 +145,16 @@ function hideTooltip() {
     }
 }
 
-// 로그아웃 기능
+// 로그아웃 함수 - 백엔드 로그아웃 엔드포인트 호출
 async function logout() {
-    try {
-        const response = await fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin' // 쿠키 포함
-        });
-
-        // 로그아웃 성공 (Spring Security는 302 리다이렉트 또는 200 응답)
-        if (response.ok || response.redirected) {
-            // 메인 페이지로 이동
+    if (confirm('로그아웃 하시겠습니까?')) {
+        try {
+            await apiPost('/logout', {});
             window.location.href = '/page/';
-        } else {
-            // 응답이 실패해도 클라이언트에서 메인으로 이동 (쿠키 삭제됨)
+        } catch (error) {
+            console.error('로그아웃 오류:', error);
             window.location.href = '/page/';
         }
-    } catch (error) {
-        console.error('로그아웃 중 오류 발생:', error);
-        // 네트워크 오류가 발생해도 메인으로 이동
-        window.location.href = '/page/';
     }
 }
 
