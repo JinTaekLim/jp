@@ -49,7 +49,7 @@ class PlaywrightUtil {
 
     // 사람처럼 보이는 브라우저를 생성하고 반환함
     fun createHumanLikeBrowser(playwright: Playwright, headless: Boolean): Browser {
-        val randomSlowMo = Random.nextDouble(800.0, 2000.0)
+        val randomSlowMo = Random.nextDouble(500.0, 1000.0)
 
         return playwright.chromium().launch(
             BrowserType.LaunchOptions()
@@ -98,13 +98,13 @@ class PlaywrightUtil {
     // 사람처럼 보이는 행동 패턴을 시뮬레이션함
     fun simulateHumanBehavior(page: Page) {
         // 초기 로딩 대기
-        page.waitForTimeout(Random.nextDouble(1000.0, 2000.0))
+        page.waitForTimeout(Random.nextDouble(500.0, 1000.0))
 
         // 마우스를 랜덤 위치로 이동
         val randomX = Random.nextInt(200, 800)
         val randomY = Random.nextInt(200, 600)
         page.mouse().move(randomX.toDouble(), randomY.toDouble())
-        page.waitForTimeout(Random.nextDouble(250.0, 750.0))
+        page.waitForTimeout(Random.nextDouble(100.0, 400.0))
 
         // 페이지 스크롤
         page.evaluate("""
@@ -113,13 +113,13 @@ class PlaywrightUtil {
                 behavior: 'smooth'
             });
         """.trimIndent())
-        page.waitForTimeout(Random.nextDouble(500.0, 1250.0))
+        page.waitForTimeout(Random.nextDouble(300.0, 800.0))
 
         // 추가 마우스 움직임
         val randomX2 = Random.nextInt(300, 1000)
         val randomY2 = Random.nextInt(100, 400)
         page.mouse().move(randomX2.toDouble(), randomY2.toDouble())
-        page.waitForTimeout(Random.nextDouble(400.0, 1000.0))
+        page.waitForTimeout(Random.nextDouble(200.0, 600.0))
     }
 
     // 콘텐츠 로딩을 기다림
@@ -130,7 +130,7 @@ class PlaywrightUtil {
             try {
                 page.waitForSelector("div[class*='word'], .item, .list-item", Page.WaitForSelectorOptions().setTimeout(10000.0))
             } catch (_: Exception) {
-                page.waitForTimeout(Random.nextDouble(1500.0, 3000.0))
+                page.waitForTimeout(Random.nextDouble(800.0, 1500.0))
             }
         }
     }
@@ -144,7 +144,7 @@ class PlaywrightUtil {
                 behavior: 'smooth'
             });
         """.trimIndent())
-        page.waitForTimeout(Random.nextDouble(750.0, 1500.0))
+        page.waitForTimeout(Random.nextDouble(400.0, 1000.0))
 
         // 다시 위로 스크롤
         page.evaluate("""
@@ -153,10 +153,10 @@ class PlaywrightUtil {
                 behavior: 'smooth'
             });
         """.trimIndent())
-        page.waitForTimeout(Random.nextDouble(500.0, 1000.0))
+        page.waitForTimeout(Random.nextDouble(300.0, 700.0))
 
         // 최종 대기
-        page.waitForTimeout(Random.nextDouble(500.0, 1250.0))
+        page.waitForTimeout(Random.nextDouble(300.0, 800.0))
     }
 
     // Playwright 인스턴스를 생성하고 반환함
@@ -187,7 +187,7 @@ class PlaywrightUtil {
                     logger.info("페이지 크롤링 완료 [${LocalDateTime.now().toFormattedString()}] - $url")
 
                     if (index < urls.size - 1) {
-                        page.waitForTimeout(Random.nextDouble(2000.0, 4000.0))
+                        page.waitForTimeout(Random.nextDouble(1000.0, 2500.0))
                     }
 
                 } catch (e: Exception) {

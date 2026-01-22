@@ -139,7 +139,7 @@ class CrawlingManager(
 
                     // 페이지 간 간격 (탐지 방지)
                     if (pageNum < pageRange.last) {
-                        page.waitForTimeout((2000..4000).random().toDouble())
+                        page.waitForTimeout((1000..2500).random().toDouble())
                     }
 
                 } catch (e: Exception) {
