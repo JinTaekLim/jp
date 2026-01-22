@@ -11,6 +11,7 @@ plugins {
     kotlin("kapt") version "1.9.24"
     id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.google.cloud.tools.jib") version "3.4.0"
 }
 
 
@@ -95,4 +96,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+// Jib 설정 - 최소한의 설정
+jib {
+    to {
+        image = "jp-spring:latest"
+    }
 }
