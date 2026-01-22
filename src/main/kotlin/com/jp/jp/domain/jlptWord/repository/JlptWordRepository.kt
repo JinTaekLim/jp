@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface JlptWordRepository : JpaRepository<JlptWordEntity, Long> {
+interface JlptWordRepository : JpaRepository<JlptWordEntity, Long>, JlptWordRepositoryCustom {
 
     // 특정 레벨의 모든 단어를 조회함
     fun findByLevel(level: String): List<JlptWordEntity>

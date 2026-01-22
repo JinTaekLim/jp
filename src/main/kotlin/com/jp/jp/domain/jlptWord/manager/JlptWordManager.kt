@@ -17,24 +17,16 @@ class JlptWordManager(
         return jlptWordRepository.saveAll(jlptWordEntities)
     }
 
-    // Cache-aside 방식으로 레벨별 단어를 조회함 (캐시가 빈 리스트일 때도 DB 조회)
-    fun findByLevel(level: JlptLevel): List<JlptWordEntity> {
-        val dbLevel = JlptLevel.toNumber(level)
-        val cachedWords = jlptWordCacheRepository.findByLevel(dbLevel)
-
-        return if (cachedWords.isNullOrEmpty()) {
-            jlptWordRepository.findByLevel(dbLevel).also { words ->
-                jlptWordCacheRepository.save(dbLevel, words)
-            }
-        } else {
-            cachedWords
-        }
-    }
-
     // 캐시된 단어 목록에서 무작위로 N개를 선택하여 반환함
     fun getRandomWords(level: JlptLevel, count: Int): List<JlptWordEntity> {
-        val words = findByLevel(level)
-        return words.shuffled().take(count)
+        val dbLevel = JlptLevel.toNumber(level)
+
+        val allIds = getRandomIdsFromCache(dbLevel)
+        // 랜덤하게 선택
+        val randomIds = allIds.shuffled().take(count)
+
+        // IN절을 통해 Entity로 변환
+        return jlptWordRepository.findAllById(randomIds)
     }
 
     // ID 목록으로 특정 단어들을 조회함
@@ -44,9 +36,15 @@ class JlptWordManager(
 
     // 특정 ID들을 제외하고 캐시된 단어 목록에서 무작위로 N개를 선택하여 반환함
     fun getRandomWordsExcluding(level: JlptLevel, count: Int, excludeIds: Set<Long>): List<JlptWordEntity> {
-        val words = findByLevel(level)
-        val filteredWords = words.filter { it.id !in excludeIds }
-        return filteredWords.shuffled().take(count)
+        val dbLevel = JlptLevel.toNumber(level)
+
+        // 캐시에서 모든 ID를 가져와서 excludeIds 제외하고 랜덤 선택
+        val allIds = getRandomIdsFromCache(dbLevel)
+        val filteredIds = allIds.filter { it !in excludeIds }
+        val randomIds = filteredIds.shuffled().take(count)
+
+        // IN절을 통해 Entity로 변환
+        return jlptWordRepository.findAllById(randomIds)
     }
 
     // ID 목록과 레벨로 특정 단어들을 조회함 (한 번의 쿼리로 처리)
@@ -55,5 +53,17 @@ class JlptWordManager(
         return ids.takeIf { it.isNotEmpty() }
             ?.let { jlptWordRepository.findByIdInAndLevel(it, dbLevel) }
             ?: emptyList()
+    }
+
+    // 캐시에서 랜덤한 ID들을 가져와서 Entity로 변환함
+    private fun getRandomIdsFromCache(level: String): List<Long> {
+
+        // 캐시에서 ID들을 가져오고, 비어있으면 DB에서 로드
+        var allIds = jlptWordCacheRepository.findByLevel(level)
+        if (allIds.isNullOrEmpty()) {
+            allIds = jlptWordRepository.findIdsByLevel(level)
+            jlptWordCacheRepository.save(level, allIds)
+        }
+        return allIds
     }
 }
