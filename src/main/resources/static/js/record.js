@@ -1,4 +1,5 @@
 // 학습 기록 페이지 무한스크롤 기능
+
 class RecordManager {
     constructor() {
         this.recordList = document.getElementById('recordList');
@@ -209,21 +210,57 @@ class RecordManager {
     }
 }
 
-// 로그아웃 함수 - 백엔드 로그아웃 엔드포인트 호출
-async function logout() {
-    if (confirm('로그아웃 하시겠습니까?')) {
-        try {
-            await apiPost('/logout', {});
-            window.location.href = '/page/';
-        } catch (error) {
-            console.error('로그아웃 오류:', error);
-            window.location.href = '/page/';
-        }
+// 사용자 정보 로드 (저장된 정보 사용, API 호출 없음)
+function loadUserInfo() {
+    const userName = document.getElementById('userName');
+    const authBtn = document.getElementById('authBtn');
+    const authIcon = document.getElementById('authIcon');
+    const authText = document.getElementById('authText');
+
+    // user-manager에서 사용자 정보 업데이트
+    window.userManager.updateUserInterface(userName, authBtn, authIcon, authText);
+
+    const user = window.userManager.getCurrentUser();
+
+    // GUEST 사용자인 경우 안내 메시지 표시하고 기록 로딩 중단
+    if (window.userManager.isGuest()) {
+        showGuestMessage();
+        return false; // 기록 로딩하지 않음
+    }
+    return true; // 기록 로딩 허용
+}
+
+// GUEST 안내 메시지 표시
+function showGuestMessage() {
+    const guestMessage = document.getElementById('guestMessage');
+    const recordList = document.getElementById('recordList');
+    const loadingMore = document.getElementById('loadingMore');
+    const noMoreData = document.getElementById('noMoreData');
+
+    // GUEST 메시지 표시
+    if (guestMessage) {
+        guestMessage.style.display = 'block';
+    }
+
+    // 기록 관련 요소들 숨기기
+    if (recordList) {
+        recordList.style.display = 'none';
+    }
+    if (loadingMore) {
+        loadingMore.style.display = 'none';
+    }
+    if (noMoreData) {
+        noMoreData.style.display = 'none';
     }
 }
 
 // 페이지 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
-    // RecordManager 초기화 (인증 체크 제거)
-    new RecordManager();
+    // 사용자 정보 로드 (저장된 정보 사용)
+    const canLoadRecords = loadUserInfo();
+
+    // 인증된 사용자(GUEST가 아닌 경우)만 기록 로드
+    if (canLoadRecords) {
+        new RecordManager();
+    }
 });

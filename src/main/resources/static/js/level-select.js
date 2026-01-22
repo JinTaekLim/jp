@@ -1,6 +1,9 @@
 // 레벨 선택 페이지 JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 사용자 정보 로드 (API 호출은 여기서만)
+    loadUserInfo();
+
     // 저장된 단어수 설정값 불러오기
     loadWordCountSetting();
 
@@ -51,15 +54,28 @@ function startStudy(level) {
     const wordCountInput = document.getElementById('wordCount');
     const wordCount = wordCountInput ? wordCountInput.value : 20;
 
+    // 현재 사용자 정보 확인
+    const user = window.userManager.getCurrentUser();
+
     // 선택한 버튼에 로딩 효과 추가
     const button = event.target.closest('.level-btn');
     if (button) {
         button.style.opacity = '0.6';
         button.style.transform = 'scale(0.98)';
 
-        // 페이지 이동 - 단어 개수를 URL 파라미터로 전달
+        // GUEST 사용자와 로그인 사용자 API 분기
+        let studyUrl;
+        if (user && user.role === 'GUEST') {
+            // GUEST 사용자: random API 사용
+            studyUrl = `/page/study/words/${level}/random?count=${wordCount}`;
+        } else {
+            // 로그인 사용자: personalized API 사용
+            studyUrl = `/page/study/words/${level}?count=${wordCount}`;
+        }
+
+        // 페이지 이동
         setTimeout(() => {
-            window.location.href = `/page/study/words/${level}?count=${wordCount}`;
+            window.location.href = studyUrl;
         }, 200);
     }
 }
@@ -145,19 +161,6 @@ function hideTooltip() {
     }
 }
 
-// 로그아웃 함수 - 백엔드 로그아웃 엔드포인트 호출
-async function logout() {
-    if (confirm('로그아웃 하시겠습니까?')) {
-        try {
-            await apiPost('/logout', {});
-            window.location.href = '/page/';
-        } catch (error) {
-            console.error('로그아웃 오류:', error);
-            window.location.href = '/page/';
-        }
-    }
-}
-
 // 키보드 네비게이션 지원
 document.addEventListener('keydown', function(event) {
     const levelButtons = document.querySelectorAll('.level-btn');
@@ -189,3 +192,110 @@ document.addEventListener('keydown', function(event) {
             break;
     }
 });
+
+// 사용자 정보 로드 (API 호출)
+async function loadUserInfo() {
+    await window.userManager.loadUserInfo();
+    updateUserInterface();
+
+    const user = window.userManager.getCurrentUser();
+    console.log('Level-select: Current user:', user);
+    console.log('Level-select: Guest popup shown before:', sessionStorage.getItem('guestPopupShown'));
+
+    // GUEST인 경우 팝업 표시
+    if (user && user.role === 'GUEST') {
+        console.log('Level-select: Showing guest popup for GUEST user');
+        showGuestPopup();
+    } else {
+        console.log('Level-select: Not showing popup:', {
+            hasUser: !!user,
+            userRole: user?.role,
+            isGuest: user?.role === 'GUEST'
+        });
+    }
+}
+
+// 사용자 인터페이스 업데이트
+function updateUserInterface() {
+    const userName = document.getElementById('userName');
+    const authBtn = document.getElementById('authBtn');
+    const authIcon = document.getElementById('authIcon');
+    const authText = document.getElementById('authText');
+    const wordCountInput = document.getElementById('wordCount');
+    const wordCountSection = document.querySelector('.word-count-section');
+    const levelGuestInfo = document.getElementById('levelGuestInfo');
+
+    // 기본 사용자 인터페이스 업데이트 (user-manager 사용)
+    window.userManager.updateUserInterface(userName, authBtn, authIcon, authText);
+
+    const user = window.userManager.getCurrentUser();
+
+    // GUEST 사용자 처리
+    if (user && user.role === 'GUEST') {
+        // GUEST 안내 메시지 표시
+        if (levelGuestInfo) {
+            levelGuestInfo.style.display = 'block';
+        }
+
+        // 단어 개수 고정 및 비활성화
+        if (wordCountInput) {
+            wordCountInput.value = 20;
+            wordCountInput.disabled = true;
+            wordCountInput.style.backgroundColor = '#F0F0F0';
+            wordCountInput.style.color = '#666';
+            wordCountInput.style.cursor = 'not-allowed';
+        }
+
+        // 단어 개수 섹션 스타일 변경
+        if (wordCountSection) {
+            wordCountSection.classList.add('guest-disabled');
+        }
+    } else {
+        // 로그인 사용자 처리
+        if (levelGuestInfo) {
+            levelGuestInfo.style.display = 'none';
+        }
+
+        if (wordCountInput) {
+            wordCountInput.disabled = false;
+            wordCountInput.style.backgroundColor = '#FFFFFF';
+            wordCountInput.style.color = '#007AFF';
+            wordCountInput.style.cursor = 'text';
+        }
+
+        if (wordCountSection) {
+            wordCountSection.classList.remove('guest-disabled');
+        }
+    }
+}
+
+// GUEST 팝업 표시
+function showGuestPopup() {
+    const popupHtml = `
+        <div class="guest-popup" id="guestPopup">
+            <div class="guest-popup-content">
+                <h3>일본어 단어장에 오신 것을 환영합니다!</h3>
+                <p>로그인 후 개인 맞춤형 복습 기능과 학습 기록을 이용하실 수 있습니다.</p>
+                <div class="guest-popup-buttons">
+                    <button class="popup-login-btn" onclick="goToLogin()">로그인</button>
+                    <button class="popup-continue-btn" onclick="closeGuestPopup()">둘러보기</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', popupHtml);
+}
+
+// GUEST 팝업 닫기
+function closeGuestPopup() {
+    const popup = document.getElementById('guestPopup');
+    if (popup) {
+        popup.remove();
+    }
+}
+
+// 로그인 페이지로 이동
+function goToLogin() {
+    window.location.href = '/page/login';
+}

@@ -12,4 +12,18 @@ class AuthService(
     fun getCurrentUserId(): Long {
         return authManager.getCurrentUserId()
     }
+
+    // 현재 로그인한 사용자의 ID를 반환하고 로그인되지 않았으면 null 반환
+    fun getCurrentUserIdOrNull(): Long? {
+        return try {
+            authManager.getCurrentUserId()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    // 로그아웃 처리 - 인증 정보 삭제
+    fun logout() {
+        authManager.clearAuthentication()
+    }
 }

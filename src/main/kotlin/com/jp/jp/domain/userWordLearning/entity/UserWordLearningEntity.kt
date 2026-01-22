@@ -5,7 +5,15 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "user_word_learning")
+@Table(
+    name = "user_word_learning",
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "uk_user_word",
+            columnNames = ["user_id", "word_id"]
+        )
+    ]
+)
 class UserWordLearningEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

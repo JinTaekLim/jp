@@ -1,6 +1,7 @@
 package com.jp.jp.domain.users.service
 
 import com.jp.jp.domain.users.dto.*
+import com.jp.jp.domain.users.entity.UserRole
 import com.jp.jp.domain.users.manager.UserManager
 import com.jp.jp.domain.users.service.business.UserServiceMapper
 import com.jp.jp.util.PasswordEncoderManager
@@ -41,4 +42,18 @@ class UserService(
         // AuthProvider를 통해 토큰 발급 및 쿠키 설정
         authProvider.issueTokensAndSetCookies(user.id!!, user.role)
     }
+
+    // 현재 로그인한 사용자 정보 조회 (로그인되지 않은 경우 GUEST 정보 반환)
+    fun getCurrentUser(userId: Long?): CurrentUserResponse {
+        return userId?.let {
+            userServiceMapper.toCurrentUserResponse(userManager.findByIdOrThrow(it))
+        } ?: userServiceMapper.toGuestResponse()
+    }
+
+    // 로그아웃 처리
+    fun logout() {
+        // AuthProvider를 통해 인증 정보 삭제
+        authProvider.logout()
+    }
+
 }

@@ -15,6 +15,9 @@ class SecurityProperties {
         return arrayOf(
             "/api/users", // POST 회원가입
             "/api/users/login",
+            "/api/users/me", // 현재 사용자 정보 조회 (GUEST 포함)
+            "/api/jlpt-words/random", // 랜덤 JLPT 단어 조회 (GUEST 접근 가능)
+            "/api/jlpt-words/random/**", // 랜덤 JLPT 단어 관련 모든 하위 경로
             "/api/collect/**", // collect API는 일단 인증 없이 접근 가능
             "/page/**", // 프론트엔드 페이지들
             "/css/**", // CSS 정적 리소스

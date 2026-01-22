@@ -358,6 +358,23 @@ body {
     flex-shrink: 0;
 }
 
+/* GUEST 사용자용 비활성화된 단어 개수 섹션 */
+.word-count-section.guest-disabled {
+    background-color: #F0F0F0;
+    border-color: #D1D1D6;
+}
+
+.word-count-section.guest-disabled .word-count-label {
+    color: #666;
+}
+
+.word-count-section.guest-disabled .word-count-input {
+    background-color: #F0F0F0;
+    color: #666;
+    cursor: not-allowed;
+    border-color: #D1D1D6;
+}
+
 .word-count-label {
     display: block;
     font-size: clamp(14px, 3.5vw, 16px);
@@ -958,4 +975,228 @@ body {
     .navbar {
         max-width: 700px;
     }
+}
+
+/* 사용자 정보 섹션 */
+.user-info-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 8px;
+}
+
+.user-info-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    border: 1px solid #E5E5EA;
+}
+
+.auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007AFF;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-btn:hover {
+    background-color: #0056CC;
+    transform: translateY(-1px);
+}
+
+.auth-btn.logout-style {
+    background-color: #FF3B30;
+}
+
+.auth-btn.logout-style:hover {
+    background-color: #D70015;
+}
+
+/* GUEST 팝업 */
+.guest-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.guest-popup-content {
+    background-color: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 320px;
+    width: 90%;
+    text-align: center;
+}
+
+.guest-popup h3 {
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.guest-popup p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.guest-popup-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.guest-popup button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.popup-login-btn {
+    background-color: #007AFF;
+    color: white;
+}
+
+.popup-login-btn:hover {
+    background-color: #0056CC;
+}
+
+.popup-continue-btn {
+    background-color: #E5E5EA;
+    color: #333;
+}
+
+.popup-continue-btn:hover {
+    background-color: #D1D1D6;
+}
+
+/* GUEST 안내 메시지 */
+.guest-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+}
+
+.guest-message-content {
+    text-align: center;
+    max-width: 300px;
+    padding: 32px 24px;
+    background-color: #F8F9FA;
+    border: 1px solid #E5E5EA;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.guest-message-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.guest-message-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.guest-message-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.guest-login-btn {
+    background-color: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.guest-login-btn:hover {
+    background-color: #0056CC;
+    transform: translateY(-1px);
+}
+
+/* 레벨 선택 페이지 GUEST 안내 메시지 */
+.level-guest-info {
+    background: linear-gradient(135deg, #F0F8FF 0%, #E6F3FF 100%);
+    border: 2px solid #B3D9FF;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.level-guest-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #007AFF 0%, #00C7FF 100%);
+}
+
+.level-guest-info-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.level-guest-info-text {
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.level-guest-info-highlight {
+    color: #007AFF;
+    font-weight: 600;
 }

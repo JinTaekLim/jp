@@ -46,4 +46,11 @@ class MainController {
         model.addAttribute("level", level)
         return "study/word-study"
     }
+
+    // 랜덤 단어 학습 페이지
+    @GetMapping("/study/words/{level}/random")
+    fun randomWordStudy(@PathVariable level: String, model: Model): String {
+        model.addAttribute("level", level)
+        return "study/word-study"
+    }
 }

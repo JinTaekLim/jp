@@ -79,7 +79,15 @@ class WordStudyApp {
 
     // API에서 단어 불러오기
     async loadWords() {
-        const response = await apiGet(`/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`);
+        // 사용자 타입에 따라 다른 API 호출
+        const user = window.userManager.getCurrentUser();
+        const isGuest = user && user.role === 'GUEST';
+
+        const apiEndpoint = isGuest
+            ? `/api/jlpt-words/random?level=${this.currentLevel}&count=${this.wordCount}`
+            : `/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`;
+
+        const response = await apiGet(apiEndpoint);
 
         // apiGet에서 null 반환시 인증 오류로 리다이렉트된 상태
         if (!response) return;
@@ -193,8 +201,14 @@ class WordStudyApp {
         this.moveToNextWord();
     }
 
-    // 학습 결과 API 전송
+    // 학습 결과 API 전송 (GUEST 사용자는 호출하지 않음)
     async recordStudyResult(wordId, isSuccess) {
+        // GUEST 사용자인 경우 API 호출하지 않음
+        if (window.userManager && window.userManager.isGuest()) {
+            console.log('GUEST 사용자: 학습 결과 기록 생략');
+            return null;
+        }
+
         const endpoint = isSuccess ? '/api/word-learning/success' : '/api/word-learning/failure';
 
         const response = await apiPost(endpoint, { wordId: wordId });
