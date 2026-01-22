@@ -553,20 +553,22 @@ body {
 
 .meaning-display {
     margin-top: 10px;
-    max-width: 90%;
     width: 100%;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    flex-direction: column; /* 수직 중앙정렬을 위해 column 방향 */
 }
 
 .meaning-list {
     list-style: none;
+    margin: 0; /* 브라우저 기본 margin 완전 제거 */
     padding: 15px;
     background-color: #F8F9FA;
     border-radius: 12px;
-    text-align: left;
+    text-align: center;
     width: 100%;
     max-width: 350px;
 }
@@ -574,15 +576,16 @@ body {
 .meaning-list li {
     font-size: clamp(14px, 3.5vw, 16px);
     color: #333;
-    margin-bottom: 6px;
+    margin: 0 0 6px 0; /* 모든 margin 명시적 설정 */
+    padding: 0; /* 기본 padding 완전 제거 */
     line-height: 1.4;
+    text-align: center;
+    list-style-type: none; /* 확실한 bullet point 제거 */
 }
 
+/* bullet point 제거하여 완전한 중앙정렬 구현 */
 .meaning-list li::before {
-    content: "• ";
-    color: #007AFF;
-    font-weight: bold;
-    margin-right: 6px;
+    display: none;
 }
 
 /* 버튼 그룹들 - 화면 하단 고정 */

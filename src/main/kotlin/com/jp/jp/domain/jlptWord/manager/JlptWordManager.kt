@@ -17,13 +17,18 @@ class JlptWordManager(
         return jlptWordRepository.saveAll(jlptWordEntities)
     }
 
-    // Cache-aside 방식으로 레벨별 단어를 조회함
+    // Cache-aside 방식으로 레벨별 단어를 조회함 (캐시가 빈 리스트일 때도 DB 조회)
     fun findByLevel(level: JlptLevel): List<JlptWordEntity> {
         val dbLevel = JlptLevel.toNumber(level)
-        return jlptWordCacheRepository.findByLevel(dbLevel)
-            ?: jlptWordRepository.findByLevel(dbLevel).also { words ->
+        val cachedWords = jlptWordCacheRepository.findByLevel(dbLevel)
+
+        return if (cachedWords.isNullOrEmpty()) {
+            jlptWordRepository.findByLevel(dbLevel).also { words ->
                 jlptWordCacheRepository.save(dbLevel, words)
             }
+        } else {
+            cachedWords
+        }
     }
 
     // 캐시된 단어 목록에서 무작위로 N개를 선택하여 반환함

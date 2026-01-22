@@ -52,8 +52,15 @@ class WordStudyApp {
         this.elements.retryBtn.addEventListener('click', () => this.markAsRetry());
         this.elements.knowBtn.addEventListener('click', () => this.markAsKnown());
 
-        // 키보드 단축키
-        document.addEventListener('keydown', (event) => this.handleKeyPress(event));
+        // 키보드 단축키 - 하나의 리스너만 등록
+        this.keyHandler = (event) => this.handleKeyPress(event);
+        document.addEventListener('keydown', this.keyHandler);
+
+        // 페이지에 포커스를 주어 키보드 이벤트를 받을 수 있게 함
+        document.body.tabIndex = -1;
+        document.body.focus();
+
+        console.log('Events bound successfully');
     }
 
     // 학습 시작
@@ -135,9 +142,9 @@ class WordStudyApp {
         this.elements.meaningDisplay.style.display = 'none';
         this.elements.meaningList.innerHTML = '';
 
-        // 버튼 텍스트 초기화
-        this.elements.hiraganaBtn.textContent = '히라가나 보기';
-        this.elements.meaningBtn.textContent = '뜻 보기';
+        // 버튼 텍스트 초기화 (키보드 단축키 포함)
+        this.elements.hiraganaBtn.textContent = '히라가나 보기 (Q)';
+        this.elements.meaningBtn.textContent = '뜻 보기 (E)';
     }
 
     // 히라가나 보기
@@ -145,10 +152,10 @@ class WordStudyApp {
         if (this.elements.hiraganaDisplay.style.display === 'none') {
             this.elements.hiraganaDisplay.textContent = this.currentWord.japanese;
             this.elements.hiraganaDisplay.style.display = 'block';
-            this.elements.hiraganaBtn.textContent = '히라가나 숨기기';
+            this.elements.hiraganaBtn.textContent = '히라가나 숨기기 (Q)';
         } else {
             this.elements.hiraganaDisplay.style.display = 'none';
-            this.elements.hiraganaBtn.textContent = '히라가나 보기';
+            this.elements.hiraganaBtn.textContent = '히라가나 보기 (Q)';
         }
     }
 
@@ -163,11 +170,11 @@ class WordStudyApp {
                 this.elements.meaningList.appendChild(li);
             });
 
-            this.elements.meaningDisplay.style.display = 'block';
-            this.elements.meaningBtn.textContent = '뜻 숨기기';
+            this.elements.meaningDisplay.style.display = 'flex';
+            this.elements.meaningBtn.textContent = '뜻 숨기기 (E)';
         } else {
             this.elements.meaningDisplay.style.display = 'none';
-            this.elements.meaningBtn.textContent = '뜻 보기';
+            this.elements.meaningBtn.textContent = '뜻 보기 (E)';
         }
     }
 
@@ -299,30 +306,97 @@ class WordStudyApp {
 
     // 키보드 단축키 처리
     handleKeyPress(event) {
-        switch(event.key) {
-            case '1':
+        // 키 반복 이벤트 무시 (키를 꾹 누르고 있을 때 발생하는 이벤트)
+        if (event.repeat) {
+            return;
+        }
+
+        // 디버깅용 로그
+        console.log('Key pressed:', event.key, 'Code:', event.code, 'Target:', event.target.tagName);
+
+        // input, textarea, contenteditable 요소에서는 키보드 단축키 비활성화
+        if (event.target.tagName === 'INPUT' ||
+            event.target.tagName === 'TEXTAREA' ||
+            event.target.contentEditable === 'true') {
+            return;
+        }
+
+        const keyCode = event.code;
+        const key = event.key.toLowerCase();
+        console.log('Processing keyCode:', keyCode, 'key:', key);
+
+        // 이벤트 중복 처리 방지 플래그
+        let handled = false;
+
+        // 물리적 키 위치로 우선 판단 (한글/영문 관계없음)
+        switch(keyCode) {
+            case 'KeyQ': // Q키 위치 (한글: ㅂ, 영문: q)
                 event.preventDefault();
+                console.log('Q key - showing hiragana');
                 if (!this.elements.hiraganaBtn.disabled) {
                     this.showHiragana();
                 }
+                handled = true;
                 break;
-            case '2':
+            case 'KeyE': // E키 위치 (한글: ㄷ, 영문: e)
                 event.preventDefault();
+                console.log('E key - showing meaning');
                 this.showMeaning();
+                handled = true;
                 break;
-            case 'ArrowLeft':
+            case 'KeyA': // A키 위치 (한글: ㅁ, 영문: a)
                 event.preventDefault();
+                console.log('A key - mark as retry');
                 this.markAsRetry();
+                handled = true;
                 break;
-            case 'ArrowRight':
+            case 'KeyD': // D키 위치 (한글: ㅇ, 영문: d)
                 event.preventDefault();
+                console.log('D key - mark as known');
                 this.markAsKnown();
+                handled = true;
                 break;
             case 'Escape':
                 event.preventDefault();
                 if (confirm('학습을 중단하시겠습니까?')) {
                     this.goToLevelSelect();
                 }
+                handled = true;
+                break;
+        }
+
+        // 이미 처리된 경우 중복 실행 방지
+        if (handled) {
+            return;
+        }
+
+        // 키 코드로 처리되지 않은 특수한 경우만 key로 처리 (폴백)
+        switch(key) {
+            case 'q':
+            case 'ㅂ': // 한글 ㅂ
+                event.preventDefault();
+                console.log('Q key (fallback) - showing hiragana');
+                if (!this.elements.hiraganaBtn.disabled) {
+                    this.showHiragana();
+                }
+                break;
+            case 'e':
+            case 'ㄷ': // 한글 ㄷ
+                event.preventDefault();
+                console.log('E key (fallback) - showing meaning');
+                this.showMeaning();
+                break;
+            case 'a':
+            case 'ㅁ': // 한글 ㅁ
+                event.preventDefault();
+                console.log('A key (fallback) - mark as retry');
+                this.markAsRetry();
+                break;
+            case 'd':
+            case 'ㅇ': // 한글 ㅇ
+                event.preventDefault();
+                console.log('D key (fallback) - mark as known');
+                this.markAsKnown();
                 break;
         }
     }
@@ -356,9 +430,23 @@ function goToLevelSelect() {
     }
 }
 
-// 앱 초기화
+// 앱 초기화 - 더 확실한 방법
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
     window.wordStudyApp = new WordStudyApp();
+
+    // tabIndex와 focus 설정만 유지
+    setTimeout(() => {
+        console.log('Setting up keyboard focus');
+
+        // body에 tabIndex와 focus 설정 (키보드 이벤트를 받기 위해 필요)
+        if (document.body) {
+            document.body.tabIndex = -1;
+            document.body.focus();
+        }
+
+        console.log('Keyboard focus setup complete');
+    }, 100);
 });
 
 // 페이지 종료 시 타이머 정리
