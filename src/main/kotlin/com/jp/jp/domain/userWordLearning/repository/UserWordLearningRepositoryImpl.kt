@@ -12,7 +12,7 @@ class UserWordLearningRepositoryImpl(
 
     private val queryFactory = JPAQueryFactory(entityManager)
 
-    // lastId 기반으로 사용자의 학습한 단어들을 조회함 (최근 학습 순으로 정렬)
+    // lastId 기반으로 사용자의 학습한 단어들을 조회함 (최신 학습 순으로 정렬)
     override fun findUserStudiedWords(
         userId: Long,
         lastId: Long?,
@@ -25,6 +25,7 @@ class UserWordLearningRepositoryImpl(
                 lastId?.let { userWordLearningEntity.id.lt(it) }
             )
             .orderBy(
+                // 최신 데이터를 먼저 조회하기 위한 정렬: 학습시간 최신순 -> ID 최신순
                 userWordLearningEntity.lastStudiedAt.desc().nullsLast(),
                 userWordLearningEntity.id.desc()
             )
