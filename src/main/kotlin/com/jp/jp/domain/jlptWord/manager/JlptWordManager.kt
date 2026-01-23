@@ -21,7 +21,7 @@ class JlptWordManager(
     fun getRandomWords(level: JlptLevel, count: Int): List<JlptWordEntity> {
         val dbLevel = JlptLevel.toNumber(level)
 
-        val allIds = getRandomIdsFromCache(dbLevel)
+        val allIds = refreshCacheIfNeeded(dbLevel)
         // 랜덤하게 선택
         val randomIds = allIds.shuffled().take(count)
 
@@ -39,7 +39,7 @@ class JlptWordManager(
         val dbLevel = JlptLevel.toNumber(level)
 
         // 캐시에서 모든 ID를 가져와서 excludeIds 제외하고 랜덤 선택
-        val allIds = getRandomIdsFromCache(dbLevel)
+        val allIds = refreshCacheIfNeeded(dbLevel)
         val filteredIds = allIds.filter { it !in excludeIds }
         val randomIds = filteredIds.shuffled().take(count)
 
@@ -55,8 +55,8 @@ class JlptWordManager(
             ?: emptyList()
     }
 
-    // 캐시에서 랜덤한 ID들을 가져와서 Entity로 변환함
-    private fun getRandomIdsFromCache(level: String): List<Long> {
+    // 캐시를 확인하고 필요시 갱신하여 단어 ID 목록을 반환함
+    fun refreshCacheIfNeeded(level: String): List<Long> {
 
         // 캐시에서 ID들을 가져오고, 비어있으면 DB에서 로드
         var allIds = jlptWordCacheRepository.findByLevel(level)
