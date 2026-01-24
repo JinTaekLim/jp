@@ -69,12 +69,8 @@ async function handleSignup(event) {
 
         const data = await response.json();
 
-        // 회원가입 성공
-        showMessage('회원가입이 완료되었습니다!', 'success');
-        // 로그인 페이지로 이동
-        setTimeout(() => {
-            window.location.href = '/page/login';
-        }, 1500);
+        // 회원가입 성공 - 바로 로그인 페이지로 이동
+        window.location.href = '/page/login';
     } catch (error) {
         console.error('Signup error:', error);
         showError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
