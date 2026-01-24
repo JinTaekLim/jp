@@ -98,9 +98,17 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-// Jib 설정 - 최소한의 설정
+// Jib 설정 - Docker Hub에 푸시
 jib {
+    from {
+        image = "eclipse-temurin:17-jre-alpine"
+    }
     to {
-        image = "jp-spring:latest"
+        image = "jintaeklim/jp-spring:latest"
+    }
+    container {
+        jvmFlags = listOf("-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul")
+        ports = listOf("8080")
+        creationTime.set("USE_CURRENT_TIMESTAMP")
     }
 }

@@ -24,11 +24,7 @@ class UserWordLearningRepositoryImpl(
                 userWordLearningEntity.userId.eq(userId),
                 lastId?.let { userWordLearningEntity.id.lt(it) }
             )
-            .orderBy(
-                // 최신 데이터를 먼저 조회하기 위한 정렬: 학습시간 최신순 -> ID 최신순
-                userWordLearningEntity.lastStudiedAt.desc().nullsLast(),
-                userWordLearningEntity.id.desc()
-            )
+            .orderBy(userWordLearningEntity.id.desc())
             .limit(size.toLong() + 1)
             .fetch()
     }

@@ -35,7 +35,7 @@ class UserWordLearningController(
     @GetMapping("/studied-words")
     fun getStudiedWords(
         @RequestParam(value = "lastId", required = false) lastId: Long?,
-        @RequestParam(value = "size", defaultValue = "20") size: Int
+        @RequestParam(value = "size", defaultValue = "5") size: Int
     ): ApiResponse<StudiedWordsResponse> {
         val userId = authService.getCurrentUserId()
         val response = userWordLearningService.getStudiedWords(userId, lastId, size)

@@ -9,7 +9,7 @@ class RecordManager {
         this.currentLastId = null;  // 현재 마지막 기록의 ID
         this.isLoading = false;     // 로딩 상태
         this.hasMore = true;        // 더 불러올 데이터가 있는지
-        this.size = 20;             // 페이지 크기
+        this.size = 5;              // 페이지 크기
 
         this.init();
     }
@@ -84,8 +84,10 @@ class RecordManager {
 
     // 기록 렌더링
     renderRecords(records) {
+        const sentinel = document.getElementById('scrollSentinel');
         const recordElements = records.map(record => this.createRecordElement(record));
-        recordElements.forEach(element => this.recordList.appendChild(element));
+        // sentinel 앞에 삽입하여 sentinel이 항상 맨 아래에 위치하도록 함
+        recordElements.forEach(element => this.recordList.insertBefore(element, sentinel));
     }
 
     // 개별 기록 요소 생성

@@ -37,8 +37,8 @@ class UserWordLearningEntity(
     val totalAttempts: Int = 0,           // 총 시도 횟수
 
     // 시간 관리
-    @Column(name = "last_studied_at")
-    val lastStudiedAt: LocalDateTime? = null,     // 마지막 학습 시간
+    @Column(name = "last_studied_at", nullable = false)
+    val lastStudiedAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "next_review_at")
     val nextReviewAt: LocalDateTime? = null,      // 다음 복습 예정 시간

@@ -29,7 +29,7 @@ class UserWordLearningService(
 
     // 사용자가 학습한 단어 목록을 lastId 기반으로 조회함 (무한스크롤)
     @Transactional(readOnly = true)
-    fun getStudiedWords(userId: Long, lastId: Long?, size: Int): StudiedWordsResponse {
+    fun  getStudiedWords(userId: Long, lastId: Long?, size: Int): StudiedWordsResponse {
         val studyRecords = userWordLearningManager.findUserStudiedWords(userId, lastId, size)
 
         // 다음 페이지 존재 여부 확인 (size + 1로 조회했으므로)
