@@ -34,4 +34,14 @@ class JlptWordController(
         val personalizedWords = jlptWordService.getPersonalizedWords(userId, level, count)
         return ApiResponse.success(personalizedWords, "회독 최적화 JLPT 단어 조회가 완료되었습니다")
     }
+
+    // 목표 레벨에 따라 하위 레벨들에서 균등 분배하여 JLPT 단어를 반환함 (N2 목표면 N2~N5에서 균등하게)
+    @GetMapping("/balanced")
+    fun getBalancedWords(
+        @RequestParam targetLevel: JlptLevel,
+        @RequestParam(defaultValue = "12") count: Int
+    ): ApiResponse<List<JlptWordEntity>> {
+        val balancedWords = jlptWordService.getBalancedWordsByTargetLevel(targetLevel, count)
+        return ApiResponse.success(balancedWords, "목표 레벨별 균등 분배 JLPT 단어 조회가 완료되었습니다")
+    }
 }

@@ -4,6 +4,9 @@ import com.jp.jp.domain.jlptWord.entity.JlptWordEntity
 import com.jp.jp.domain.jlptWord.repository.JlptWordCacheRepository
 import com.jp.jp.domain.jlptWord.repository.JlptWordRepository
 import com.jp.jp.domain.userJlptLevel.entity.JlptLevel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
 
 @Component
@@ -53,6 +56,16 @@ class JlptWordManager(
         return ids.takeIf { it.isNotEmpty() }
             ?.let { jlptWordRepository.findByIdInAndLevel(it, dbLevel) }
             ?: emptyList()
+    }
+
+    // 레벨별 지정된 개수의 단어를 비동기 병렬로 조회함
+    fun getRandomWordsByLevels(levelCounts: Map<JlptLevel, Int>): List<JlptWordEntity> = runBlocking {
+        levelCounts
+            .filter { (_, count) -> count > 0 }
+            .map { (level, count) -> async { getRandomWords(level, count) } }
+            .awaitAll()
+            .flatten()
+            .shuffled()
     }
 
     // 캐시를 확인하고 필요시 갱신하여 단어 ID 목록을 반환함

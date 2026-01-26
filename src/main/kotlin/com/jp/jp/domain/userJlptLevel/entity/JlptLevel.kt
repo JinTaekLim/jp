@@ -30,5 +30,13 @@ enum class JlptLevel {
                 N1 -> "1"
             }
         }
+
+        // 목표 레벨에 포함되는 모든 레벨을 반환함 (N2면 [N5, N4, N3, N2])
+        fun getIncludedLevels(targetLevel: JlptLevel): List<JlptLevel> {
+            return values().filter { level ->
+                // ordinal 값 비교: N5(0) <= N4(1) <= N3(2) <= N2(3) <= N1(4)
+                level.ordinal <= targetLevel.ordinal
+            }.sortedBy { it.ordinal } // N5부터 목표레벨까지 순서대로 정렬
+        }
     }
 }
