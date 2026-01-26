@@ -87,13 +87,23 @@ class WordStudyApp {
 
     // API에서 단어 불러오기
     async loadWords() {
-        // 사용자 타입에 따라 다른 API 호출
+        // 사용자 타입과 학습 모드에 따라 다른 API 호출
         const user = window.userManager.getCurrentUser();
         const isGuest = user && user.role === 'GUEST';
+        const studyMode = sessionStorage.getItem('jp_studyMode') || 'individual';
 
-        const apiEndpoint = isGuest
-            ? `/api/jlpt-words/random?level=${this.currentLevel}&count=${this.wordCount}`
-            : `/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`;
+        let apiEndpoint;
+
+        if (isGuest) {
+            // 게스트 사용자: 항상 랜덤 API
+            apiEndpoint = `/api/jlpt-words/random?level=${this.currentLevel}&count=${this.wordCount}`;
+        } else if (studyMode === 'balanced') {
+            // 균등 학습 모드: balanced API 사용
+            apiEndpoint = `/api/jlpt-words/balanced?targetLevel=${this.currentLevel}&count=${this.wordCount}`;
+        } else {
+            // 개별 학습 모드: personalized API 사용
+            apiEndpoint = `/api/jlpt-words/personalized?level=${this.currentLevel}&count=${this.wordCount}`;
+        }
 
         const response = await apiGet(apiEndpoint);
 
