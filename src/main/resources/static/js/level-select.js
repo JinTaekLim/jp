@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 저장된 단어수 설정값 불러오기
     loadWordCountSetting();
 
+    // URL에서 study mode 파라미터 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const studyMode = urlParams.get('mode') || sessionStorage.getItem('jp_studyMode') || 'individual';
+
+    // study mode에 따라 UI 업데이트
+    updateUIForStudyMode(studyMode);
+
     // 레벨 버튼들에 애니메이션 추가
     const levelButtons = document.querySelectorAll('.level-btn');
 
@@ -57,20 +64,31 @@ function startStudy(level) {
     // 현재 사용자 정보 확인
     const user = window.userManager.getCurrentUser();
 
+    // study mode 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const studyMode = urlParams.get('mode') || sessionStorage.getItem('jp_studyMode') || 'individual';
+
     // 선택한 버튼에 로딩 효과 추가
     const button = event.target.closest('.level-btn');
     if (button) {
         button.style.opacity = '0.6';
         button.style.transform = 'scale(0.98)';
 
-        // GUEST 사용자와 로그인 사용자 API 분기
+        // study mode와 사용자 타입에 따라 API 분기
         let studyUrl;
-        if (user && user.role === 'GUEST') {
-            // GUEST 사용자: random API 사용
-            studyUrl = `/page/study/words/${level}/random?count=${wordCount}`;
+
+        if (studyMode === 'balanced') {
+            // 균등 학습 모드: 균등 분배 API 사용
+            studyUrl = `/page/study/words/${level}/balanced?count=${wordCount}`;
         } else {
-            // 로그인 사용자: personalized API 사용
-            studyUrl = `/page/study/words/${level}?count=${wordCount}`;
+            // 개별 학습 모드: 기존 로직
+            if (user && user.role === 'GUEST') {
+                // GUEST 사용자: random API 사용
+                studyUrl = `/page/study/words/${level}/random?count=${wordCount}`;
+            } else {
+                // 로그인 사용자: personalized API 사용
+                studyUrl = `/page/study/words/${level}?count=${wordCount}`;
+            }
         }
 
         // 페이지 이동
@@ -193,26 +211,16 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// 사용자 정보 로드 (API 호출)
+// 사용자 정보 로드 (이미 로드된 정보 사용)
 async function loadUserInfo() {
-    await window.userManager.loadUserInfo();
-    updateUserInterface();
-
+    // 사용자 정보가 없는 경우에만 API 호출 (직접 접근한 경우)
     const user = window.userManager.getCurrentUser();
-    console.log('Level-select: Current user:', user);
-    console.log('Level-select: Guest popup shown before:', sessionStorage.getItem('guestPopupShown'));
-
-    // GUEST인 경우 팝업 표시
-    if (user && user.role === 'GUEST') {
-        console.log('Level-select: Showing guest popup for GUEST user');
-        showGuestPopup();
-    } else {
-        console.log('Level-select: Not showing popup:', {
-            hasUser: !!user,
-            userRole: user?.role,
-            isGuest: user?.role === 'GUEST'
-        });
+    if (!user) {
+        await window.userManager.loadUserInfo();
     }
+
+    updateUserInterface();
+    console.log('Level-select: Current user:', window.userManager.getCurrentUser());
 }
 
 // 사용자 인터페이스 업데이트
@@ -269,33 +277,48 @@ function updateUserInterface() {
     }
 }
 
-// GUEST 팝업 표시
-function showGuestPopup() {
-    const popupHtml = `
-        <div class="guest-popup" id="guestPopup">
-            <div class="guest-popup-content">
-                <h3>일본어 단어장에 오신 것을 환영합니다!</h3>
-                <p>로그인 후 개인 맞춤형 복습 기능과 학습 기록을 이용하실 수 있습니다.</p>
-                <div class="guest-popup-buttons">
-                    <button class="popup-login-btn" onclick="goToLogin()">로그인</button>
-                    <button class="popup-continue-btn" onclick="closeGuestPopup()">둘러보기</button>
-                </div>
-            </div>
-        </div>
-    `;
 
-    document.body.insertAdjacentHTML('beforeend', popupHtml);
+// 모드 선택 페이지로 이동
+function goToModeSelect() {
+    window.location.href = '/page/study/mode';
 }
 
-// GUEST 팝업 닫기
-function closeGuestPopup() {
-    const popup = document.getElementById('guestPopup');
-    if (popup) {
-        popup.remove();
+// study mode에 따라 UI 업데이트
+function updateUIForStudyMode(studyMode) {
+    const levelTitle = document.querySelector('.level-title');
+    const levelGuestInfo = document.getElementById('levelGuestInfo');
+
+    if (studyMode === 'balanced') {
+        // 균등 학습 모드
+        if (levelTitle) {
+            levelTitle.textContent = '균등 학습 - 레벨 선택';
+        }
+
+        // GUEST 사용자 안내 메시지 수정
+        if (levelGuestInfo) {
+            const infoText = levelGuestInfo.querySelector('.level-guest-info-text');
+            if (infoText) {
+                infoText.innerHTML = `
+                    <span class="level-guest-info-highlight">균등 학습 모드</span>에서는 목표 레벨까지의<br>
+                    모든 단어를 균등하게 분배하여 학습합니다!
+                `;
+            }
+        }
+    } else {
+        // 개별 학습 모드 (기본)
+        if (levelTitle) {
+            levelTitle.textContent = '개별 학습 - 레벨 선택';
+        }
+
+        // 기본 GUEST 사용자 안내 메시지 유지
+        if (levelGuestInfo) {
+            const infoText = levelGuestInfo.querySelector('.level-guest-info-text');
+            if (infoText) {
+                infoText.innerHTML = `
+                    <span class="level-guest-info-highlight">로그인</span> 후에는 사용자 맞춤 학습을 제공합니다!<br>
+                    학습 진도와 복습 일정을 관리하실 수 있어요.
+                `;
+            }
+        }
     }
-}
-
-// 로그인 페이지로 이동
-function goToLogin() {
-    window.location.href = '/page/login';
 }

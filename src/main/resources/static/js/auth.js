@@ -34,8 +34,8 @@ async function handleLogin(event) {
 
         const data = await response.json();
 
-        // 로그인 성공 - 바로 레벨 선택 페이지로 이동
-        window.location.href = '/page/study/level';
+        // 로그인 성공 - 모드 선택 페이지로 이동
+        window.location.href = '/page/study/mode';
     } catch (error) {
         console.error('Login error:', error);
         showError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');

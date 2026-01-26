@@ -32,7 +32,7 @@ class UserManager {
         }
     }
 
-    // API에서 사용자 정보 로드 (레벨 선택 페이지에서만 호출)
+    // API에서 사용자 정보 로드
     async loadUserInfo() {
         try {
             const response = await apiGet('/api/users/me');
@@ -125,11 +125,11 @@ class UserManager {
             try {
                 await apiPost('/api/users/logout', {});
                 this.clearUser(); // 사용자 정보 초기화
-                window.location.href = '/page/study/level'; // 레벨 선택 페이지로 이동
+                window.location.href = '/page/study/mode'; // 모드 선택 페이지로 이동
             } catch (error) {
                 console.error('로그아웃 오류:', error);
                 this.clearUser(); // 오류가 발생해도 정보 초기화
-                window.location.href = '/page/study/level'; // 레벨 선택 페이지로 이동
+                window.location.href = '/page/study/mode'; // 모드 선택 페이지로 이동
             }
         }
     }

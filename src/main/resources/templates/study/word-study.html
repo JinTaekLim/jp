@@ -9,17 +9,19 @@
 <body>
     <div class="container">
         <div class="study-content">
-            <!-- 헤더 -->
-            <div class="study-header">
-                <button type="button" class="back-btn" onclick="history.back()">
+            <!-- 상단 헤더 (뒤로가기 버튼 + 제목 + 타이머 모두 같은 선상) -->
+            <div class="study-top-header">
+                <!-- 뒤로가기 버튼 -->
+                <button type="button" class="study-back-btn" onclick="goToLevelSelect()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
 
+                <!-- 제목 -->
                 <h1 class="study-title">일본어 단어장</h1>
 
-                <!-- 진행바와 타이머 -->
+                <!-- 타이머 -->
                 <div class="progress-timer">
                     <div class="progress-bar">
                         <div id="progressFill" class="progress-fill"></div>
@@ -30,8 +32,11 @@
 
             <!-- 단어 표시 영역 -->
             <div class="word-display">
-                <!-- 품사 표시 (우측상단 고정) -->
-                <div id="partOfSpeech" class="part-of-speech"></div>
+                <!-- 품사와 레벨 표시 (우측상단 고정) -->
+                <div class="word-info-tags">
+                    <div id="partOfSpeech" class="part-of-speech"></div>
+                    <div id="wordLevel" class="word-level"></div>
+                </div>
 
                 <!-- 히라가나 표시 (상단 고정 위치) -->
                 <div id="hiraganaDisplay" class="hiragana-display" style="display: none;"></div>

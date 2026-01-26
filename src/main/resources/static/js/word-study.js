@@ -30,6 +30,7 @@ class WordStudyApp {
             hiraganaDisplay: document.getElementById('hiraganaDisplay'),
             mainWord: document.getElementById('mainWord'),
             partOfSpeech: document.getElementById('partOfSpeech'),
+            wordLevel: document.getElementById('wordLevel'),
             meaningDisplay: document.getElementById('meaningDisplay'),
             meaningList: document.getElementById('meaningList'),
             hiraganaBtn: document.getElementById('hiraganaBtn'),
@@ -125,8 +126,9 @@ class WordStudyApp {
         const displayText = this.currentWord.kanji || this.currentWord.japanese;
         this.elements.mainWord.textContent = displayText;
 
-        // 품사 표시
+        // 품사와 레벨을 별도 박스에 표시
         this.elements.partOfSpeech.textContent = this.currentWord.partOfSpeech;
+        this.elements.wordLevel.textContent = this.currentLevel;
 
         // 히라가나 버튼 활성화/비활성화
         const hasKanji = this.currentWord.kanji && this.currentWord.kanji !== this.currentWord.japanese;
@@ -411,9 +413,10 @@ class WordStudyApp {
         location.reload();
     }
 
-    // 레벨 선택으로 이동
+    // 레벨 선택으로 이동 (모드 정보 유지)
     goToLevelSelect() {
-        window.location.href = '/page/study/level';
+        const studyMode = sessionStorage.getItem('jp_studyMode') || 'individual';
+        window.location.href = `/page/study/level?mode=${studyMode}`;
     }
 }
 

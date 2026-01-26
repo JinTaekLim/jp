@@ -28,6 +28,12 @@ class MainController {
         return "auth/signup"
     }
 
+    // 학습 모드 선택 페이지
+    @GetMapping("/study/mode")
+    fun studyModeSelect(): String {
+        return "study/study-mode-select"
+    }
+
     // 레벨 선택 페이지
     @GetMapping("/study/level")
     fun levelSelect(): String {
@@ -50,6 +56,13 @@ class MainController {
     // 랜덤 단어 학습 페이지
     @GetMapping("/study/words/{level}/random")
     fun randomWordStudy(@PathVariable level: String, model: Model): String {
+        model.addAttribute("level", level)
+        return "study/word-study"
+    }
+
+    // 균등 학습 페이지
+    @GetMapping("/study/words/{level}/balanced")
+    fun balancedWordStudy(@PathVariable level: String, model: Model): String {
         model.addAttribute("level", level)
         return "study/word-study"
     }
