@@ -11,6 +11,7 @@ class WordStudyApp {
         this.currentWordIndex = 0;
         this.currentWord = null;
         this.retryWords = []; // 다시 학습할 단어들
+        this.isLoading = false; // API 호출 중 로딩 상태
         this.studySession = {
             startTime: new Date(),
             wordsStudied: 0,
@@ -192,14 +193,20 @@ class WordStudyApp {
 
     // 다시 학습 표시
     async markAsRetry() {
+        // 로딩 중이면 중복 실행 방지
+        if (this.isLoading) return;
+
         // 다시 학습 목록에 추가
         this.retryWords.push(this.currentWord);
 
         // API 호출 - 실패 기록
+        this.showLoading(true);
         try {
             await this.recordStudyResult(this.currentWord.id, false);
         } catch (error) {
             console.error('Failed to record retry:', error);
+        } finally {
+            this.showLoading(false);
         }
 
         this.studySession.wordsStudied++;
@@ -208,11 +215,17 @@ class WordStudyApp {
 
     // 알고 있음 표시
     async markAsKnown() {
+        // 로딩 중이면 중복 실행 방지
+        if (this.isLoading) return;
+
         // API 호출 - 성공 기록
+        this.showLoading(true);
         try {
             await this.recordStudyResult(this.currentWord.id, true);
         } catch (error) {
             console.error('Failed to record success:', error);
+        } finally {
+            this.showLoading(false);
         }
 
         this.studySession.wordsStudied++;
@@ -318,6 +331,11 @@ class WordStudyApp {
 
     // 키보드 단축키 처리
     handleKeyPress(event) {
+        // 로딩 중이면 키보드 이벤트 차단
+        if (this.isLoading) {
+            return;
+        }
+
         // 키 반복 이벤트 무시 (키를 꾹 누르고 있을 때 발생하는 이벤트)
         if (event.repeat) {
             return;
@@ -413,9 +431,31 @@ class WordStudyApp {
         }
     }
 
-    // 로딩 표시
+    // 로딩 표시 및 사용자 인터랙션 차단
     showLoading(show) {
+        this.isLoading = show;
         this.elements.loading.style.display = show ? 'flex' : 'none';
+
+        // 모든 버튼 비활성화/활성화
+        const buttons = [
+            this.elements.hiraganaBtn,
+            this.elements.meaningBtn,
+            this.elements.retryBtn,
+            this.elements.knowBtn
+        ];
+
+        buttons.forEach(button => {
+            if (button) {
+                button.disabled = show;
+                if (show) {
+                    button.style.opacity = '0.5';
+                    button.style.pointerEvents = 'none';
+                } else {
+                    button.style.opacity = '1';
+                    button.style.pointerEvents = 'auto';
+                }
+            }
+        });
     }
 
     // 학습 재시작
