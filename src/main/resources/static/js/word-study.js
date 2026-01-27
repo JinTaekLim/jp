@@ -138,7 +138,7 @@ class WordStudyApp {
 
         // 품사와 레벨을 별도 박스에 표시
         this.elements.partOfSpeech.textContent = this.currentWord.partOfSpeech;
-        this.elements.wordLevel.textContent = this.currentLevel;
+        this.elements.wordLevel.textContent = 'N' + this.currentWord.level;
 
         // 히라가나 버튼 활성화/비활성화
         const hasKanji = this.currentWord.kanji && this.currentWord.kanji !== this.currentWord.japanese;
