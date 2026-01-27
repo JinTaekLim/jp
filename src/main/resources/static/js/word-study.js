@@ -67,7 +67,10 @@ class WordStudyApp {
 
     // 학습 시작
     async startStudy() {
-        this.showLoading(true);
+        // 초기 로딩은 기본 로딩 요소만 사용 (인터랙션 차단 없이)
+        if (this.elements.loading) {
+            this.elements.loading.style.display = 'flex';
+        }
 
         try {
             await this.loadWords();
@@ -82,7 +85,9 @@ class WordStudyApp {
             console.error('Failed to load words:', error);
             alert('단어를 불러오는데 실패했습니다. 다시 시도해주세요.');
         } finally {
-            this.showLoading(false);
+            if (this.elements.loading) {
+                this.elements.loading.style.display = 'none';
+            }
         }
     }
 
@@ -200,13 +205,13 @@ class WordStudyApp {
         this.retryWords.push(this.currentWord);
 
         // API 호출 - 실패 기록
-        this.showLoading(true);
+        this.setButtonsDisabled(true);
         try {
             await this.recordStudyResult(this.currentWord.id, false);
         } catch (error) {
             console.error('Failed to record retry:', error);
         } finally {
-            this.showLoading(false);
+            this.setButtonsDisabled(false);
         }
 
         this.studySession.wordsStudied++;
@@ -219,13 +224,13 @@ class WordStudyApp {
         if (this.isLoading) return;
 
         // API 호출 - 성공 기록
-        this.showLoading(true);
+        this.setButtonsDisabled(true);
         try {
             await this.recordStudyResult(this.currentWord.id, true);
         } catch (error) {
             console.error('Failed to record success:', error);
         } finally {
-            this.showLoading(false);
+            this.setButtonsDisabled(false);
         }
 
         this.studySession.wordsStudied++;
@@ -431,10 +436,10 @@ class WordStudyApp {
         }
     }
 
-    // 로딩 표시 및 사용자 인터랙션 차단
-    showLoading(show) {
-        this.isLoading = show;
-        this.elements.loading.style.display = show ? 'flex' : 'none';
+    // API 호출 중 사용자 입력 차단 (로딩창 없이 버튼만 비활성화)
+    setButtonsDisabled(disabled) {
+        this.isLoading = disabled;
+        // 로딩창은 표시하지 않고 버튼 상태만 변경
 
         // 모든 버튼 비활성화/활성화
         const buttons = [
@@ -446,13 +451,15 @@ class WordStudyApp {
 
         buttons.forEach(button => {
             if (button) {
-                button.disabled = show;
-                if (show) {
-                    button.style.opacity = '0.5';
+                button.disabled = disabled;
+                if (disabled) {
+                    button.style.opacity = '0.6';
                     button.style.pointerEvents = 'none';
+                    button.style.cursor = 'not-allowed';
                 } else {
                     button.style.opacity = '1';
                     button.style.pointerEvents = 'auto';
+                    button.style.cursor = 'pointer';
                 }
             }
         });
