@@ -1335,3 +1335,11 @@ body {
     color: #666;
     line-height: 1.4;
 }
+
+/* 총 학습 단어 수 표시 영역 (제목 옆 작은 텍스트) */
+.total-words-count {
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    margin-left: 8px;
+}

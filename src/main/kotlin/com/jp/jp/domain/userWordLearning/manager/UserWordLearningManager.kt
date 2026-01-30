@@ -92,4 +92,9 @@ class UserWordLearningManager(
         return userWordLearningRepository.findUserStudiedWords(userId, lastId, size)
     }
 
+    // 특정 사용자가 학습한 총 단어 수를 반환함
+    fun countByUserId(userId: Long): Long {
+        return userWordLearningRepository.countByUserId(userId)
+    }
+
 }

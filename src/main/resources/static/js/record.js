@@ -212,6 +212,40 @@ class RecordManager {
     }
 }
 
+// 총 학습 단어 수 로드 (페이지 진입 시 한 번만 호출)
+async function loadTotalWordsCount() {
+    try {
+        const response = await apiGet('/api/word-learning/studied-words/count');
+
+        // apiGet에서 null 반환시 인증 오류로 리다이렉트된 상태
+        if (!response) return;
+
+        const result = await response.json();
+
+        if (result.success) {
+            displayTotalWordsCount(result.data);
+        } else {
+            console.error('총 단어 수 조회 오류:', result.message);
+        }
+    } catch (error) {
+        console.error('총 단어 수 로드 오류:', error);
+    }
+}
+
+// 총 학습 단어 수 화면에 표시
+function displayTotalWordsCount(totalCount) {
+    const totalWordsCount = document.getElementById('totalWordsCount');
+    const totalWordsNumber = document.getElementById('totalWordsNumber');
+
+    if (totalWordsNumber) {
+        totalWordsNumber.textContent = totalCount.toLocaleString();
+    }
+
+    if (totalWordsCount) {
+        totalWordsCount.style.display = 'inline';
+    }
+}
+
 // 사용자 정보 로드 (저장된 정보 사용, API 호출 없음)
 function loadUserInfo() {
     const userName = document.getElementById('userName');
@@ -257,12 +291,16 @@ function showGuestMessage() {
 }
 
 // 페이지 로드 완료 시 초기화
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // 사용자 정보 로드 (저장된 정보 사용)
     const canLoadRecords = loadUserInfo();
 
-    // 인증된 사용자(GUEST가 아닌 경우)만 기록 로드
+    // 인증된 사용자(GUEST가 아닌 경우)만 기록 관련 데이터 로드
     if (canLoadRecords) {
+        // 총 학습 단어 수 로드 (페이지 진입 시 한 번만 호출)
+        await loadTotalWordsCount();
+
+        // 학습 기록 목록 로드 (무한스크롤)
         new RecordManager();
     }
 });

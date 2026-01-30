@@ -41,4 +41,12 @@ class UserWordLearningController(
         val response = userWordLearningService.getStudiedWords(userId, lastId, size)
         return ApiResponse.success(response, "학습한 단어 목록을 조회했습니다")
     }
+
+    // 학습한 단어 총 개수 조회 API
+    @GetMapping("/studied-words/count")
+    fun getTotalStudiedWordsCount(): ApiResponse<Long> {
+        val userId = authService.getCurrentUserId()
+        val totalCount = userWordLearningService.getTotalStudiedWordsCount(userId)
+        return ApiResponse.success(totalCount, "학습한 단어 총 개수를 조회했습니다")
+    }
 }

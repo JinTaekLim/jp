@@ -48,4 +48,10 @@ class UserWordLearningService(
             hasNext
         )
     }
+
+    // 사용자가 학습한 총 단어 수를 조회함
+    @Transactional(readOnly = true)
+    fun getTotalStudiedWordsCount(userId: Long): Long {
+        return userWordLearningManager.countByUserId(userId)
+    }
 }

@@ -17,4 +17,7 @@ interface UserWordLearningRepository : JpaRepository<UserWordLearningEntity, Lon
 
     // 특정 상태이면서 복습 시간이 지난 단어들을 조회함 (스케줄러용)
     fun findByStatusAndNextReviewAtBefore(status: StudyStatus, dateTime: LocalDateTime): List<UserWordLearningEntity>
+
+    // 특정 사용자가 학습한 총 단어 수를 반환함
+    fun countByUserId(userId: Long): Long
 }
